@@ -1,0 +1,1862 @@
+package typ
+
+import (
+	"database/sql/driver"
+	"encoding/json"
+	"fmt"
+	"time"
+)
+
+type NullBool struct {
+	P     *bool
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullBool) V() bool {
+	if n.P == nil {
+		return false
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullBool) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullBool) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullBool) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	return n.V(), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullBool) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Bool().V()
+	n.P = &v
+	return nil
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullBool) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return n.Error
+	}
+	if uv == nil {
+		return nil
+	}
+	v, ok := uv.(bool)
+	if !ok {
+		n.Error = ErrConvert
+		return ErrConvert
+	}
+	n.P = &v
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullBool) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	return json.Marshal(n.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullBool) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of bool with filled values from slice of NullBool
+func NullBoolSlice(null []NullBool, valid bool) []bool {
+	slice := make([]bool, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullBool from bool
+func NBool(value bool) NullBool {
+	return NullBool{P: &value}
+}
+
+type NullComplex64 struct {
+	P     *complex64
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullComplex64) V() complex64 {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullComplex64) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullComplex64) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullComplex64) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	nv := Complex64Float64(n.V())
+	return nv.V(), nv.Error
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullComplex64) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Complex64()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return nil
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullComplex64) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	v, ok := uv.(string)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	vCmplx := StringComplex64(v)
+	if !vCmplx.Valid() {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = vCmplx.P
+	return n.Error
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullComplex64) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	return json.Marshal(fmt.Sprintf("%v", n.V()))
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullComplex64) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of complex64 with filled values from slice of NullComplex64
+func NullComplex64Slice(null []NullComplex64, valid bool) []complex64 {
+	slice := make([]complex64, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullComplex64 from complex64
+func NComplex64(value complex64) NullComplex64 {
+	return NullComplex64{P: &value}
+}
+
+type NullComplex struct {
+	P     *complex128
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullComplex) V() complex128 {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullComplex) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullComplex) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullComplex) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	nv := ComplexFloat64(n.V())
+	return nv.V(), nv.Error
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullComplex) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Complex()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullComplex) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	v, ok := uv.(string)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	vCmplx := StringComplex(v)
+	if !vCmplx.Valid() {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = vCmplx.P
+	return n.Error
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullComplex) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	return json.Marshal(fmt.Sprintf("%v", n.V()))
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullComplex) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of complex128 with filled values from slice of NullComplex
+func NullComplexSlice(null []NullComplex, valid bool) []complex128 {
+	slice := make([]complex128, len(null))
+
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullComplex from complex128
+func NComplex(value complex128) NullComplex {
+	return NullComplex{P: &value}
+}
+
+type NullInt struct {
+	P     *int
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullInt) V() int {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullInt) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullInt) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullInt) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	return int64(n.V()), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullInt) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Int()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullInt) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	vFloat, ok := uv.(float64)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	v := FloatInt(vFloat)
+	if v.Error != nil {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = v.P
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullInt) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	v := Of(n.V()).Float()
+	if v.Error != nil {
+		return nil, ErrConvert
+	}
+	return json.Marshal(v.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullInt) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of int with filled values from slice of NullInt
+func NullIntSlice(null []NullInt, valid bool) []int {
+	slice := make([]int, len(null))
+
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullInt from int
+func NInt(value int) NullInt {
+	return NullInt{P: &value}
+}
+
+type NullInt8 struct {
+	P     *int8
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullInt8) V() int8 {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullInt8) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullInt8) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullInt8) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	return int64(n.V()), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullInt8) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Int8()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullInt8) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	vFloat, ok := uv.(float64)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	v := FloatInt8(vFloat)
+	if v.Error != nil {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = v.P
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullInt8) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	v := Of(n.V()).Float()
+	return json.Marshal(v.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullInt8) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of int8 with filled values from slice of NullInt8
+func NullInt8Slice(null []NullInt8, valid bool) []int8 {
+	slice := make([]int8, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullInt8 from int8
+func NInt8(value int8) NullInt8 {
+	return NullInt8{P: &value}
+}
+
+type NullInt16 struct {
+	P     *int16
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullInt16) V() int16 {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullInt16) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullInt16) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullInt16) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	return int64(n.V()), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullInt16) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Int16()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullInt16) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	vFloat, ok := uv.(float64)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	v := FloatInt16(vFloat)
+	if v.Error != nil {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = v.P
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullInt16) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	v := Of(n.V()).Float()
+	return json.Marshal(v.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullInt16) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of int16 with filled values from slice of NullInt16
+func NullInt16Slice(null []NullInt16, valid bool) []int16 {
+	slice := make([]int16, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullInt16 from int16
+func NInt16(value int16) NullInt16 {
+	return NullInt16{P: &value}
+}
+
+type NullInt32 struct {
+	P     *int32
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullInt32) V() int32 {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullInt32) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullInt32) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullInt32) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	return int64(n.V()), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullInt32) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Int32()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullInt32) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	vFloat, ok := uv.(float64)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	v := FloatInt32(vFloat)
+	if v.Error != nil {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = v.P
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullInt32) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	v := Of(n.V()).Float()
+	return json.Marshal(v.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullInt32) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of int32 with filled values from slice of NullInt32
+func NullInt32Slice(null []NullInt32, valid bool) []int32 {
+	slice := make([]int32, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullInt32 from int32
+func NInt32(value int32) NullInt32 {
+	return NullInt32{P: &value}
+}
+
+type NullInt64 struct {
+	P     *int64
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullInt64) V() int64 {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullInt64) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullInt64) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullInt64) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	return int64(n.V()), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullInt64) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Int64()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullInt64) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	vFloat, ok := uv.(float64)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	v := FloatInt64(vFloat)
+	if v.Error != nil {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = v.P
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullInt64) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	v := Of(n.V()).Float()
+	if v.Error != nil {
+		return nil, ErrConvert
+	}
+	return json.Marshal(v.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullInt64) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of int64 with filled values from slice of NullInt64
+func NullInt64Slice(null []NullInt64, valid bool) []int64 {
+	slice := make([]int64, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullInt64 from int64
+func NInt64(value int64) NullInt64 {
+	return NullInt64{P: &value}
+}
+
+type NullUint struct {
+	P     *uint
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullUint) V() uint {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullUint) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullUint) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullUint) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	nv := UintInt64(uint64(n.V()))
+	return nv.V(), nv.Error
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullUint) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Uint()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullUint) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	vFloat, ok := uv.(float64)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	v := FloatUint(vFloat)
+	if v.Error != nil {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = v.P
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullUint) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	v := Of(n.V()).Float()
+	if v.Error != nil {
+		return nil, ErrConvert
+	}
+	return json.Marshal(v.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullUint) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of uint with filled values from slice of NullUint
+func NullUintSlice(null []NullUint, valid bool) []uint {
+	slice := make([]uint, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullUint from uint
+func NUint(value uint) NullUint {
+	return NullUint{P: &value}
+}
+
+type NullUint8 struct {
+	P     *uint8
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullUint8) V() uint8 {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullUint8) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullUint8) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullUint8) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	return int64(n.V()), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullUint8) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Uint8()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullUint8) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	vFloat, ok := uv.(float64)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	v := FloatUint8(vFloat)
+	if v.Error != nil {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = v.P
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullUint8) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	v := Of(n.V()).Float()
+	return json.Marshal(v.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullUint8) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of uint8 with filled values from slice of NullUint8
+func NullUint8Slice(null []NullUint8, valid bool) []uint8 {
+	slice := make([]uint8, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullUint8 from uint8
+func NUint8(value uint8) NullUint8 {
+	return NullUint8{P: &value}
+}
+
+type NullUint16 struct {
+	P     *uint16
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullUint16) V() uint16 {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullUint16) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullUint16) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullUint16) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	return int64(n.V()), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullUint16) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Uint16()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullUint16) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	vFloat, ok := uv.(float64)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	v := FloatUint16(vFloat)
+	if v.Error != nil {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = v.P
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullUint16) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	v := Of(n.V()).Float()
+	return json.Marshal(v.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullUint16) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of uint16 with filled values from slice of NullUint16
+func NullUint16Slice(null []NullUint16, valid bool) []uint16 {
+	slice := make([]uint16, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullUint16 from uint16
+func NUint16(value uint16) NullUint16 {
+	return NullUint16{P: &value}
+}
+
+type NullUint32 struct {
+	P     *uint32
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullUint32) V() uint32 {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullUint32) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullUint32) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullUint32) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	return int64(n.V()), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullUint32) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Uint32()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullUint32) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	vFloat, ok := uv.(float64)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	v := FloatUint32(vFloat)
+	if v.Error != nil {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = v.P
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullUint32) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	v := Of(n.V()).Float()
+	return json.Marshal(v.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullUint32) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of uint32 with filled values from slice of NullUint32
+func NullUint32Slice(null []NullUint32, valid bool) []uint32 {
+	slice := make([]uint32, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullUint32 from uint32
+func NUint32(value uint32) NullUint32 {
+	return NullUint32{P: &value}
+}
+
+type NullUint64 struct {
+	P     *uint64
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullUint64) V() uint64 {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullUint64) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullUint64) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullUint64) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	nv := UintInt64(n.V())
+	return nv.V(), nv.Error
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullUint64) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Uint64()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullUint64) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	vFloat, ok := uv.(float64)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	v := FloatUint64(vFloat)
+	if v.Error != nil {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = v.P
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullUint64) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	v := Of(n.V()).Float()
+	if v.Error != nil {
+		return nil, ErrConvert
+	}
+	return json.Marshal(v.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullUint64) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of uint64 with filled values from slice of NullUint64
+func NullUint64Slice(null []NullUint64, valid bool) []uint64 {
+	slice := make([]uint64, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullUint64 from uint64
+func NUint64(value uint64) NullUint64 {
+	return NullUint64{P: &value}
+}
+
+type NullFloat32 struct {
+	P     *float32
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullFloat32) V() float32 {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullFloat32) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullFloat32) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullFloat32) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	return float64(n.V()), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullFloat32) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Float32()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullFloat32) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return n.Error
+	}
+	if uv == nil {
+		return nil
+	}
+	vFloat, ok := uv.(float64)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	v := Float32(vFloat)
+	if v.Error != nil {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = v.P
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullFloat32) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	return json.Marshal(n.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullFloat32) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of float32 with filled values from slice of NullFloat32
+func NullFloat32Slice(null []NullFloat32, valid bool) []float32 {
+	slice := make([]float32, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullFloat32 from float32
+func NFloat32(value float32) NullFloat32 {
+	return NullFloat32{P: &value}
+}
+
+type NullFloat struct {
+	P     *float64
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullFloat) V() float64 {
+	if n.P == nil {
+		return 0
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullFloat) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullFloat) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullFloat) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	return n.V(), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullFloat) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	v := Of(value).Float()
+	if v.Error != nil {
+		n.Error = v.Error
+		return v.Error
+	}
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullFloat) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	v, ok := uv.(float64)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = &v
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullFloat) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	return json.Marshal(n.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullFloat) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of float64 with filled values from slice of NullFloat
+func NullFloatSlice(null []NullFloat, valid bool) []float64 {
+	slice := make([]float64, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullFloat from float64
+func NFloat(value float64) NullFloat {
+	return NullFloat{P: &value}
+}
+
+type NullString struct {
+	P     *string
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullString) V() string {
+	if n.P == nil {
+		return ""
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullString) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullString) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullString) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	return n.V(), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullString) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if value == nil {
+		return nil
+	}
+	if v, ok := value.([]byte); ok {
+		value = string(v)
+	}
+	v := Of(value).String()
+	n.P, n.Error = v.P, v.Error
+	return v.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullString) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var uv interface{}
+	if err := json.Unmarshal(b, &uv); err != nil {
+		n.Error = err
+		return err
+	}
+	if uv == nil {
+		return nil
+	}
+	v, ok := uv.(string)
+	if !ok {
+		n.Error = ErrConvert
+		return n.Error
+	}
+	n.P = &v
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullString) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	return json.Marshal(n.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullString) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of string with filled values from slice of NullString
+func NullStringSlice(null []NullString, valid bool) []string {
+	slice := make([]string, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullString from string
+func NString(value string) NullString {
+	return NullString{P: &value}
+}
+
+type NullInterface struct {
+	P     interface{}
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullInterface) V() interface{} {
+	return n.P
+}
+
+// Determines whether a value has been set
+func (n NullInterface) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullInterface) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullInterface) Value() (driver.Value, error) {
+	if n.Error == nil && !driver.IsValue(n.V()) {
+		return nil, ErrConvert
+	}
+	if n.Error != nil {
+		return nil, nil
+	}
+	return n.V(), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullInterface) Scan(value interface{}) error {
+	n.P, n.Error = nil, nil
+	if !driver.IsValue(value) {
+		n.Error = ErrInvalidArgument
+		return n.Error
+	}
+	n.P = value
+	return nil
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullInterface) UnmarshalJSON(b []byte) error {
+	n.P, n.Error = nil, nil
+	var value interface{}
+	if err := json.Unmarshal(b, &value); err != nil {
+		n.Error = err
+		return err
+	}
+	if value == nil {
+		return nil
+	}
+	n.P = value
+	return nil
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullInterface) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return json.Marshal(nil)
+	}
+	return json.Marshal(n.V())
+}
+
+// New Typ instance with himself Value.
+// If current value is invalid, nil *Type returned
+func (n NullInterface) Typ(options ...Option) *Type {
+	if n.Error != nil {
+		return NewType(nil, n.Error)
+	}
+	return NewType(n.V(), n.Error, options...)
+}
+
+// Returns slice of interface{} with filled values from slice of NullInterface
+func NullInterfaceSlice(null []NullInterface, valid bool) []interface{} {
+	slice := make([]interface{}, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullInterface from interface{}
+func NInterface(value interface{}) NullInterface {
+	return NullInterface{P: value}
+}
+
+type NullTime struct {
+	P     *time.Time
+	Error error
+}
+
+// Returns value of underlying type if it was set, otherwise default value
+func (n NullTime) V() time.Time {
+	if n.P == nil {
+		return time.Time{}
+	}
+	return *n.P
+}
+
+// Determines whether a value has been set
+func (n NullTime) Present() bool {
+	return n.P != nil
+}
+
+// Determines whether a value has been valid
+func (n NullTime) Valid() bool {
+	return n.Error == nil
+}
+
+// Value implements the sql driver Valuer interface.
+func (n NullTime) Value() (driver.Value, error) {
+	if n.Error != nil {
+		return nil, nil
+	}
+	return n.V(), nil
+}
+
+// Scan implements the sql Scanner interface.
+func (n *NullTime) Scan(value interface{}) error {
+	n.Error = nil
+	var tv time.Time
+	tv, ok := value.(time.Time)
+	if !ok {
+		n.Error = ErrInvalidArgument
+	}
+	n.P = &tv
+	return n.Error
+}
+
+// UnmarshalJSON implements the json Unmarshaler interface.
+func (n *NullTime) UnmarshalJSON(b []byte) error {
+	v := n.V()
+	n.Error = v.UnmarshalJSON(b)
+	return n.Error
+}
+
+// MarshalJSON implements the json Marshaler interface.
+func (n NullTime) MarshalJSON() ([]byte, error) {
+	if n.Error != nil {
+		return []byte("null"), nil
+	}
+	return n.V().MarshalJSON()
+}
+
+// Returns slice of time.Time with filled values from slice of NullTime
+func NullTimeSlice(null []NullTime, valid bool) []time.Time {
+	slice := make([]time.Time, len(null))
+	for k, v := range null {
+		if valid && v.Error != nil {
+			continue
+		}
+		slice[k] = v.V()
+	}
+	return slice
+}
+
+// Returns NullTime from time.Time
+func NTime(value time.Time) NullTime {
+	return NullTime{P: &value}
+}
