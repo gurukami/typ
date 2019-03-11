@@ -101,10 +101,10 @@ func init() {
 		nb := &NullBool{P: &v}
 		return nb, true
 	})
-	// - to SqlValueType
-	matrixSuite.SetConverter(getDefaultType(reflect.Bool), reflect.TypeOf(SqlValueType{}), func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
+	// - to SQLValueType
+	matrixSuite.SetConverter(getDefaultType(reflect.Bool), reflect.TypeOf(SQLValueType{}), func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 
-		return SqlValueType{driver.Value(from), from}, true
+		return SQLValueType{driver.Value(from), from}, true
 	})
 	// For other types
 	matrixSuite.SetConverter(nil, getDefaultType(reflect.Bool), func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {

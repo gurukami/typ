@@ -206,85 +206,85 @@ func isComplex128(kind reflect.Kind) bool {
 	return kind == reflect.Complex128
 }
 
-// Determine whether a value is primitives type (int, uint, float, complex, bool)
+// IsPrimitives determine whether a value is primitives type (int, uint, float, complex, bool)
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsPrimitives(indirect ...bool) bool {
 	return isPrimitives(t.Kind(indirect...))
 }
 
-// Determine whether a value is composite type (array, slice, map)
+// IsComposite determine whether a value is composite type (array, slice, map)
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsComposite(indirect ...bool) bool {
 	return isComposite(t.Kind(indirect...))
 }
 
-// Determine whether a value is signed integer type
+// IsInt determine whether a value is signed integer type
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsInt(indirect ...bool) bool {
 	return isInt(t.Kind(indirect...))
 }
 
-// Determine whether a value is unsigned integer type
+// IsUint determine whether a value is unsigned integer type
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsUint(indirect ...bool) bool {
 	return isUint(t.Kind(indirect...))
 }
 
-// Determine whether a value is float type
+// IsFloat determine whether a value is float type
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsFloat(indirect ...bool) bool {
 	return isFloat(t.Kind(indirect...))
 }
 
-// Determine whether a value is complex type
+// IsComplex determine whether a value is complex type
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsComplex(indirect ...bool) bool {
 	return isComplex(t.Kind(indirect...))
 }
 
-// Determine whether a value is numeric type (int, uint, float, complex)
+// IsNumeric determine whether a value is numeric type (int, uint, float, complex)
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsNumeric(indirect ...bool) bool {
 	return isNumeric(t.Kind(indirect...))
 }
 
-// Determine whether a value is pointer type (Ptr, UnsafePointer, Uintptr)
+// IsPointer determine whether a value is pointer type (Ptr, UnsafePointer, Uintptr)
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsPointer(indirect ...bool) bool {
 	return isPointer(t.Kind(indirect...))
 }
 
-// Determine whether a value is boolean type
+// IsBool determine whether a value is boolean type
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsBool(indirect ...bool) bool {
 	return isBool(t.Kind(indirect...))
 }
 
-// Determine whether a value is string type
+// IsString determine whether a value is string type
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsString(indirect ...bool) bool {
 	return isString(t.Kind(indirect...))
 }
 
-// Determine whether a value is float32 type
+// IsFloat32 determine whether a value is float32 type
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsFloat32(indirect ...bool) bool {
 	return isFloat32(t.Kind(indirect...))
 }
 
-// Determine whether a value is float64 type
+// IsFloat64 determine whether a value is float64 type
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsFloat64(indirect ...bool) bool {
 	return isFloat64(t.Kind(indirect...))
 }
 
-// Determine whether a value is complex64 type
+// IsComplex64 determine whether a value is complex64 type
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsComplex64(indirect ...bool) bool {
 	return isComplex64(t.Kind(indirect...))
 }
 
-// Determine whether a value is complex128 type
+// IsComplex128 determine whether a value is complex128 type
 // If indirect argument specified, real reflect type returned
 func (t *Type) IsComplex128(indirect ...bool) bool {
 	return isComplex128(t.Kind(indirect...))

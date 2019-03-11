@@ -57,9 +57,9 @@ var (
 		reflect.TypeOf(&NullComplex64{}),
 	}
 	sqlValueReflectTypes = []reflect.Type{
-		reflect.TypeOf(SqlValueType{}),
+		reflect.TypeOf(SQLValueType{}),
 	}
-	sqlValueReflectType = reflect.TypeOf(SqlValueType{})
+	sqlValueReflectType = reflect.TypeOf(SQLValueType{})
 )
 
 func init() {
@@ -122,7 +122,7 @@ func init() {
 		{reflect.ValueOf(time.Now()), nil},
 	})
 	// Converters
-	// - from &Null*{} to JsonToken
+	// - from &Null*{} to JSONToken
 	matrixSuite.SetConverters(nullReflectTypes, jsonTokenReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		var (
 			v    interface{}
@@ -174,7 +174,7 @@ func init() {
 		if !rv.IsValid() {
 			return nil, false
 		}
-		jt := JsonToken{from, rv.Type(), b, err}
+		jt := JSONToken{from, rv.Type(), b, err}
 		return jt, err == nil
 	})
 	matrixSuite.SetConverter(reflect.TypeOf(time.Time{}), reflect.TypeOf(&NullTime{}), func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
@@ -182,9 +182,9 @@ func init() {
 		return &NullTime{P: &v}, true
 	})
 	matrixSuite.SetConverter(reflect.TypeOf(time.Time{}), sqlValueReflectType, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
-		return SqlValueType{from.(time.Time), from}, true
+		return SQLValueType{from.(time.Time), from}, true
 	})
-	// - from &Null*{} to SqlValueType
+	// - from &Null*{} to SQLValueType
 	matrixSuite.SetConverters(nullReflectTypes, sqlValueReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		var (
 			v    interface{}
@@ -229,14 +229,14 @@ func init() {
 			v, null = tv.V(), !tv.Valid()
 		}
 		if null || v == nil {
-			return SqlValueType{}, true
+			return SQLValueType{}, true
 		}
 		rv := reflect.ValueOf(v)
 		cv, valid, _ := matrixSuite.Convert(rv.Interface(), to)
 		if !valid {
-			return SqlValueType{}, false
+			return SQLValueType{}, false
 		}
-		return cv, driver.IsValue(cv.(SqlValueType).SqlValue)
+		return cv, driver.IsValue(cv.(SQLValueType).SQLValue)
 	})
 	// For other types
 	matrixSuite.SetConverters(interfaceReflectTypes, nullReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
@@ -250,8 +250,8 @@ func init() {
 func TestNullBool(t *testing.T) {
 	testMarshalJSON(t, &NullBool{})
 	testUnmarshalJSON(t, &NullBool{})
-	testScanSql(t, &NullBool{})
-	testValueSql(t, &NullBool{})
+	testScanSQL(t, &NullBool{})
+	testValueSQL(t, &NullBool{})
 	testTyp(t, &NullBool{})
 }
 
@@ -261,8 +261,8 @@ func TestNullComplex(t *testing.T) {
 	} {
 		testMarshalJSON(t, nv)
 		testUnmarshalJSON(t, nv)
-		testScanSql(t, nv)
-		testValueSql(t, nv)
+		testScanSQL(t, nv)
+		testValueSQL(t, nv)
 		testTyp(t, nv)
 	}
 }
@@ -275,8 +275,8 @@ func TestNullInt(t *testing.T) {
 	} {
 		testMarshalJSON(t, nv)
 		testUnmarshalJSON(t, nv)
-		testScanSql(t, nv)
-		testValueSql(t, nv)
+		testScanSQL(t, nv)
+		testValueSQL(t, nv)
 		testTyp(t, nv)
 	}
 }
@@ -289,8 +289,8 @@ func TestNullUint(t *testing.T) {
 	} {
 		testMarshalJSON(t, nv)
 		testUnmarshalJSON(t, nv)
-		testScanSql(t, nv)
-		testValueSql(t, nv)
+		testScanSQL(t, nv)
+		testValueSQL(t, nv)
 		testTyp(t, nv)
 	}
 }
@@ -301,8 +301,8 @@ func TestNullFloat(t *testing.T) {
 	} {
 		testMarshalJSON(t, nv)
 		testUnmarshalJSON(t, nv)
-		testScanSql(t, nv)
-		testValueSql(t, nv)
+		testScanSQL(t, nv)
+		testValueSQL(t, nv)
 		testTyp(t, nv)
 	}
 }
@@ -313,8 +313,8 @@ func TestNullString(t *testing.T) {
 	} {
 		testMarshalJSON(t, nv)
 		testUnmarshalJSON(t, nv)
-		testScanSql(t, nv)
-		testValueSql(t, nv)
+		testScanSQL(t, nv)
+		testValueSQL(t, nv)
 		testTyp(t, nv)
 	}
 }
@@ -325,8 +325,8 @@ func TestNullInterface(t *testing.T) {
 	} {
 		testMarshalJSON(t, nv)
 		testUnmarshalJSON(t, nv)
-		testScanSql(t, nv)
-		testValueSql(t, nv)
+		testScanSQL(t, nv)
+		testValueSQL(t, nv)
 		testTyp(t, nv)
 	}
 }
@@ -337,17 +337,17 @@ func TestNullTime(t *testing.T) {
 	} {
 		testMarshalJSON(t, nv)
 		testUnmarshalJSON(t, nv)
-		testScanSql(t, nv)
-		testValueSql(t, nv)
+		testScanSQL(t, nv)
+		testValueSQL(t, nv)
 	}
 }
 
-func testScanSql(t *testing.T, nv interface{}) {
-	testData := matrixSuite.GenerateToTyp(matrixSuite.Generate(), reflect.TypeOf(SqlValueType{}))
+func testScanSQL(t *testing.T, nv interface{}) {
+	testData := matrixSuite.GenerateToTyp(matrixSuite.Generate(), reflect.TypeOf(SQLValueType{}))
 	for _, di := range testData {
-		sv := di.value.Interface().(SqlValueType)
+		sv := di.value.Interface().(SQLValueType)
 		cnv, valid, _ := matrixSuite.Convert(sv, reflect.TypeOf(nv))
-		aErr := nv.(sql.Scanner).Scan(sv.SqlValue)
+		aErr := nv.(sql.Scanner).Scan(sv.SQLValue)
 		eValue, _, eValid, _ := testGetNullIfaceValue(cnv)
 		aValue, _, aValid, eErr := testGetNullIfaceValue(nv)
 		if !valid {
@@ -355,7 +355,7 @@ func testScanSql(t *testing.T, nv interface{}) {
 		}
 		if !matrixSuite.Compare(aValue, eValue) || aValid != eValid || aErr != eErr {
 			t.Errorf("%T{}.Scan(%T([%[2]v])) failed, expected Value by reference %s",
-				nv, sv.SqlValue,
+				nv, sv.SQLValue,
 				errNull{
 					eValue, eValid, eErr,
 					aValue, aValid, aErr,
@@ -364,21 +364,21 @@ func testScanSql(t *testing.T, nv interface{}) {
 	}
 }
 
-func testValueSql(t *testing.T, nv interface{}) {
+func testValueSQL(t *testing.T, nv interface{}) {
 	testData := matrixSuite.GenerateToTyp(matrixSuite.Generate(), reflect.TypeOf(nv))
 	for _, di := range testData {
 		v := di.value.Interface()
 		eValue, valid, _ := matrixSuite.Convert(v, sqlValueReflectType)
-		sv := eValue.(SqlValueType)
+		sv := eValue.(SQLValueType)
 		actualValue, actualErr := v.(driver.Valuer).Value()
 		if !valid {
 			if _, ok := actualErr.(ErrorConvert); !ok {
 				t.Errorf("%T{%+[1]v}.Value() must returns 'ErrorConvert' error instead of '%T'", v, actualErr)
 			}
 		} else {
-			if !matrixSuite.Compare(actualValue, sv.SqlValue) && actualErr == nil {
+			if !matrixSuite.Compare(actualValue, sv.SQLValue) && actualErr == nil {
 				t.Errorf("%T{%+[1]v}.Value() failed, expected (expected == actual) %v == %v, error %v",
-					v, sv.SqlValue, actualValue, actualErr,
+					v, sv.SQLValue, actualValue, actualErr,
 				)
 			}
 		}
@@ -409,7 +409,7 @@ func testMarshalJSON(t *testing.T, nv interface{}) {
 		if eValue == nil || !vv {
 			continue
 		}
-		jt := eValue.(JsonToken)
+		jt := eValue.(JSONToken)
 		actualBytes, actualErr := v.(json.Marshaler).MarshalJSON()
 		if !bytes.Equal(actualBytes, jt.Token) && actualErr == nil {
 			t.Errorf("%T{%+[1]v}.MarshalJSON() failed, expected (expected == actual) []byte (%s == %s), error %v",
@@ -420,9 +420,9 @@ func testMarshalJSON(t *testing.T, nv interface{}) {
 }
 
 func testUnmarshalJSON(t *testing.T, nv interface{}) {
-	testData := matrixSuite.GenerateToTyp(matrixSuite.Generate(), reflect.TypeOf(JsonToken{}))
+	testData := matrixSuite.GenerateToTyp(matrixSuite.Generate(), reflect.TypeOf(JSONToken{}))
 	for _, di := range testData {
-		jt := di.value.Interface().(JsonToken)
+		jt := di.value.Interface().(JSONToken)
 		cnv, valid, _ := matrixSuite.Convert(jt, reflect.TypeOf(nv))
 		aErr := nv.(json.Unmarshaler).UnmarshalJSON(jt.Token)
 		eValue, _, eValid, _ := testGetNullIfaceValue(cnv)
@@ -445,4 +445,3 @@ func testUnmarshalJSON(t *testing.T, nv interface{}) {
 // TODO: Test N*
 // TODO: Test Null*Slice
 // TODO: Test Present
-

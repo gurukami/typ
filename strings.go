@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-// Convert interface value to string
+// String convert interface value to string
 func (t *Type) String() (nv NullString) {
 	if nv.Error = t.err; t.err != nil {
 		return
@@ -15,7 +15,7 @@ func (t *Type) String() (nv NullString) {
 	return
 }
 
-// Convert interface value to string and replace zero values to empty string if needed
+// StringEmpty convert interface value to string and replace zero values to empty string if needed
 func (t *Type) StringEmpty() (nv NullString) {
 	if nv.Error = t.err; t.err != nil {
 		return
@@ -30,7 +30,7 @@ func (t *Type) StringEmpty() (nv NullString) {
 	return r
 }
 
-// Convert interface value to string with default value if it wasn't converted or it has zero value
+// StringDefault convert interface value to string with default value if it wasn't converted or it has zero value
 func (t *Type) StringDefault(defaultValue string) (nv NullString) {
 	if nv.Error = t.err; t.err != nil {
 		return
@@ -45,7 +45,7 @@ func (t *Type) StringDefault(defaultValue string) (nv NullString) {
 	return
 }
 
-// Convert interface value to string
+// toString convert interface value to string
 func (t *Type) toString() (nv NullString) {
 	if !t.rv.IsValid() {
 		nv.Error = ErrUnexpectedValue
@@ -66,18 +66,17 @@ func (t *Type) toString() (nv NullString) {
 			v := "true"
 			nv.P = &v
 			return
-		} else {
-			v := "false"
-			nv.P = &v
-			return
 		}
+		v := "false"
+		nv.P = &v
+		return
 	}
 	v := fmt.Sprintf("%+v", t.rv.Interface())
 	nv.P = &v
 	return
 }
 
-// Convert interface value to string represents as int
+// StringInt convert interface value to string represents as int
 func (t *Type) StringInt() (nv NullString) {
 	if nv.Error = t.err; t.err != nil {
 		return
@@ -86,7 +85,7 @@ func (t *Type) StringInt() (nv NullString) {
 	return NewType(v.V(), v.Error).String()
 }
 
-// Convert interface value to string represent as bool
+// StringBool convert interface value to string represent as bool
 func (t *Type) StringBool() (nv NullString) {
 	if nv.Error = t.err; t.err != nil {
 		return
@@ -95,7 +94,7 @@ func (t *Type) StringBool() (nv NullString) {
 	return NewType(v.V(), v.Error).String()
 }
 
-// Convert interface value to string represent as float
+// StringFloat convert interface value to string represent as float
 func (t *Type) StringFloat(defaultValue ...float32) (nv NullString) {
 	if nv.Error = t.err; t.err != nil {
 		return
@@ -104,7 +103,7 @@ func (t *Type) StringFloat(defaultValue ...float32) (nv NullString) {
 	return NewType(v.V(), v.Error).String()
 }
 
-// Convert interface value to string represent as complex
+// StringComplex convert interface value to string represent as complex
 func (t *Type) StringComplex(defaultValue ...complex64) (nv NullString) {
 	if nv.Error = t.err; t.err != nil {
 		return
@@ -113,7 +112,7 @@ func (t *Type) StringComplex(defaultValue ...complex64) (nv NullString) {
 	return NewType(v.V(), v.Error).String()
 }
 
-// Concatenate interface values to string
+// Concat returns concatenated interface values to string
 func Concat(values []interface{}, options ...Option) NullString {
 	var opts opts
 	if len(options) > 0 {
@@ -137,7 +136,7 @@ func Concat(values []interface{}, options ...Option) NullString {
 	return NullString{P: &out, Error: nil}
 }
 
-// Convert value from bool to string
+// BoolString convert value from bool to string
 func BoolString(from bool) (nv NullString) {
 	if from {
 		v := "true"
@@ -149,7 +148,7 @@ func BoolString(from bool) (nv NullString) {
 	return
 }
 
-// Convert value from int64 to string
+// IntString convert value from int64 to string
 func IntString(from int64, options ...IntStringOption) (nv NullString) {
 	opts := intStrOpts{base: 10}
 	if len(options) > 0 {
@@ -170,7 +169,7 @@ func IntString(from int64, options ...IntStringOption) (nv NullString) {
 	return
 }
 
-// Convert value from uint64 to string
+// UintString convert value from uint64 to string
 func UintString(from uint64, options ...UintStringOption) (nv NullString) {
 	opts := uintStrOpts{base: 10}
 	if len(options) > 0 {
@@ -191,7 +190,7 @@ func UintString(from uint64, options ...UintStringOption) (nv NullString) {
 	return
 }
 
-// Convert value from float to string
+// FloatString convert value from float to string
 func FloatString(from float64, options ...FloatStringOption) (nv NullString) {
 	opts := floatStrOpts{fmtByte: byte('e'), precision: -1, bitSize: 64}
 	if len(options) > 0 {
@@ -212,7 +211,7 @@ func FloatString(from float64, options ...FloatStringOption) (nv NullString) {
 	return
 }
 
-// Convert value from complex128 to string
+// ComplexString convert value from complex128 to string
 func ComplexString(from complex128, options ...ComplexStringOption) (nv NullString) {
 	opts := complexStrOpts{}
 	if len(options) > 0 {

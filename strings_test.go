@@ -42,10 +42,9 @@ func init() {
 				b = true
 			}
 			return b, bt || bf
-		} else {
-			if len(s) > 0 {
-				b = true
-			}
+		}
+		if len(s) > 0 {
+			b = true
 		}
 		return b, true
 	})
@@ -152,11 +151,11 @@ func init() {
 		return nb, true
 	})
 
-	// - to SqlValueType
+	// - to SQLValueType
 
-	matrixSuite.SetConverter(getDefaultType(reflect.String), reflect.TypeOf(SqlValueType{}), func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
+	matrixSuite.SetConverter(getDefaultType(reflect.String), reflect.TypeOf(SQLValueType{}), func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 
-		return SqlValueType{driver.Value(from), from}, true
+		return SQLValueType{driver.Value(from), from}, true
 	})
 }
 

@@ -1,7 +1,9 @@
 # Typ
 
-[![Build Status](https://travis-ci.org/gurukami/typ.svg "Travis CI status")](https://travis-ci.org/gurukami/typ)
 [![GoDoc](https://godoc.org/github.com/gurukami/typ?status.svg)](https://godoc.org/github.com/gurukami/typ)
+[![Build Status](https://travis-ci.org/gurukami/typ.svg "Travis CI status")](https://travis-ci.org/gurukami/typ)
+[![Coverage Status](https://img.shields.io/codecov/c/github/gurukami/typ/master.svg)](https://codecov.io/github/gurukami/typ?branch=master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/gurukami/typ)](https://goreportcard.com/report/github.com/gurukami/typ)
 
 Typ is a library providing a powerful interface to impressive user experience with conversion and fetching data from built-in types in Golang
 

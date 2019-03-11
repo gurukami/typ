@@ -1,7 +1,6 @@
 package typ
 
 import (
-	"errors"
 	"fmt"
 	"reflect"
 )
@@ -10,7 +9,7 @@ var matrixSuite = newMatrix()
 
 type Convert func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool)
 
-type Comparator func(a interface{}, b interface{}) (bool)
+type Comparator func(a interface{}, b interface{}) bool
 
 func newMatrix() *matrix {
 	return &matrix{
@@ -135,7 +134,7 @@ func (m *matrix) Convert(from interface{}, to reflect.Type, opts ...interface{})
 		defaultConverter = ok
 	}
 	if !ok {
-		panic(errors.New(fmt.Sprintf("no converter from %s to %s type", ft, to)))
+		panic(fmt.Errorf("no converter from %s to %s type", ft, to))
 	}
 	iv, ok := c.converter(from, to, opts...)
 	if !defaultConverter {
@@ -150,7 +149,7 @@ func (m *matrix) Convert(from interface{}, to reflect.Type, opts ...interface{})
 	}
 	var err error
 	if iv == nil {
-		err = errors.New(fmt.Sprintf("no converter from %s to %s type", ft, to))
+		err = fmt.Errorf("no converter from %s to %s type", ft, to)
 	}
 	return iv, ok, err
 }
@@ -215,7 +214,7 @@ func (m *matrix) GenerateImplements(typ reflect.Type) []dataItem {
 	return out
 }
 
-func (m *matrix) Compare(a interface{}, b interface{}) (bool) {
+func (m *matrix) Compare(a interface{}, b interface{}) bool {
 	if (a == nil && b != nil) || (a != nil && b == nil) {
 		return false
 	}
@@ -238,7 +237,7 @@ func (m *matrix) Compare(a interface{}, b interface{}) (bool) {
 
 func (m *matrix) ListConverters() []string {
 	var out []string
-	for ci, _ := range m.converters {
+	for ci := range m.converters {
 		out = append(out, fmt.Sprintf("%s ==> %s", ci.from, ci.to))
 	}
 	return out
@@ -246,7 +245,7 @@ func (m *matrix) ListConverters() []string {
 
 func (m *matrix) ListTypes() []string {
 	var out []string
-	for ci, _ := range m.data {
+	for ci := range m.data {
 		out = append(out, ci)
 	}
 	return out

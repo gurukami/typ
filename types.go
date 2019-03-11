@@ -7,7 +7,9 @@ import (
 )
 
 var (
+	// ErrBaseInvalid is returned when a base option has invalid range
 	ErrBaseInvalid    = ErrorInvalidArgument(errors.New("base option must be in range 2 <= base <= 36"))
+	// ErrFmtByteInvalid is returned when a fmt byte has invalid value
 	ErrFmtByteInvalid = ErrorInvalidArgument(errors.New("fmtByte option must be one of 'b', 'e', 'E', 'f', 'g', 'G'"))
 )
 
@@ -30,10 +32,15 @@ type (
 		defaultValue *string
 	}
 
-	Option func(*opts) error
-	IntStringOption func(*intStrOpts) error
-	UintStringOption func(*uintStrOpts) error
-	FloatStringOption func(*floatStrOpts) error
+	// Option is interface function used as argument value for type conversion configuration
+	Option              func(*opts) error
+	// IntStringOption is interface function used as argument value for type conversion configuration from int to string
+	IntStringOption     func(*intStrOpts) error
+	// UintStringOption is interface function used as argument value for type conversion configuration from uint to string
+	UintStringOption    func(*uintStrOpts) error
+	// FloatStringOption is interface function used as argument value for type conversion configuration from float to string
+	FloatStringOption   func(*floatStrOpts) error
+	// ComplexStringOption is interface function used as argument value for type conversion configuration from complex to string
 	ComplexStringOption func(*complexStrOpts) error
 )
 
@@ -43,7 +50,7 @@ type opts struct {
 	suffix, prefix, delimiter *string
 }
 
-// Set default string value for int conversion to string.
+// IntStringDefault set default string value for int conversion to string.
 func IntStringDefault(value string) IntStringOption {
 	return func(t *intStrOpts) error {
 		t.defaultValue = &value
@@ -51,7 +58,7 @@ func IntStringDefault(value string) IntStringOption {
 	}
 }
 
-// Set base option for int conversion to string.
+// IntStringBase set base for int conversion to string.
 // The base  must be 2 <= base <= 36
 // for digit values >= 10.
 func IntStringBase(value int) IntStringOption {
@@ -61,7 +68,7 @@ func IntStringBase(value int) IntStringOption {
 	}
 }
 
-// Set default string value for uint conversion to string.
+// UintStringDefault set default string value for uint conversion to string.
 func UintStringDefault(value string) UintStringOption {
 	return func(t *uintStrOpts) error {
 		t.defaultValue = &value
@@ -69,7 +76,7 @@ func UintStringDefault(value string) UintStringOption {
 	}
 }
 
-// Set base option for uint conversion to string.
+// UintStringBase set base for uint conversion to string.
 // The base  must be 2 <= base <= 36
 // for digit values >= 10.
 func UintStringBase(value int) UintStringOption {
@@ -79,7 +86,7 @@ func UintStringBase(value int) UintStringOption {
 	}
 }
 
-// Set default string value for float conversion to string.
+// FloatStringDefault set default string value for float conversion to string.
 func FloatStringDefault(value string) FloatStringOption {
 	return func(t *floatStrOpts) error {
 		t.defaultValue = &value
@@ -87,7 +94,7 @@ func FloatStringDefault(value string) FloatStringOption {
 	}
 }
 
-// Set precision option for float conversion to string.
+// FloatStringFmtByte set format for float conversion to string.
 // The precision prec controls the number of digits (excluding the exponent)
 // printed by the 'e', 'E', 'f', 'g', and 'G' formats.
 // For 'e', 'E', and 'f' it is the number of digits after the decimal point.
@@ -102,7 +109,7 @@ func FloatStringFmtByte(value byte) FloatStringOption {
 	}
 }
 
-// Set precision option for float conversion to string.
+// FloatStringPrecision set precision for float conversion to string.
 // The precision prec controls the number of digits (excluding the exponent)
 // printed by the 'e', 'E', 'f', 'g', and 'G' formats.
 // For 'e', 'E', and 'f' it is the number of digits after the decimal point.
@@ -117,7 +124,7 @@ func FloatStringPrecision(value int) FloatStringOption {
 	}
 }
 
-// Set bitSize option for float conversion to string.
+// FloatStringBitSize set bit size for float conversion to string.
 // The bitSize  must be 32 or 64
 func FloatStringBitSize(value int) FloatStringOption {
 	return func(t *floatStrOpts) error {
@@ -126,7 +133,7 @@ func FloatStringBitSize(value int) FloatStringOption {
 	}
 }
 
-// Set default string value for complex conversion to string.
+// ComplexStringDefault set default string value for complex conversion to string.
 func ComplexStringDefault(value string) ComplexStringOption {
 	return func(t *complexStrOpts) error {
 		t.defaultValue = &value
@@ -134,7 +141,7 @@ func ComplexStringDefault(value string) ComplexStringOption {
 	}
 }
 
-// Set precision option for float conversion.
+// Precision set precision for float conversion.
 // The precision prec controls the number of digits (excluding the exponent)
 // printed by the 'e', 'E', 'f', 'g', and 'G' formats.
 // For 'e', 'E', and 'f' it is the number of digits after the decimal point.
@@ -149,7 +156,7 @@ func Precision(value int) Option {
 	}
 }
 
-// Set base option for int conversion.
+// Base set base for int conversion.
 // The base  must be 2 <= base <= 36
 // for digit values >= 10.
 func Base(value int) Option {
@@ -162,7 +169,7 @@ func Base(value int) Option {
 	}
 }
 
-// Set fmtByte option for float conversion.
+// FmtByte set format for float conversion.
 // The format fmt is one of
 // 'b' (-ddddp±ddd, a binary exponent),
 // 'e' (-d.dddde±dd, a decimal exponent),
@@ -182,7 +189,7 @@ func FmtByte(value byte) Option {
 	}
 }
 
-// Set suffix option for string manipulation
+// Suffix set suffix for string manipulation
 func Suffix(value string) Option {
 	return func(t *opts) error {
 		t.suffix = &value
@@ -190,7 +197,7 @@ func Suffix(value string) Option {
 	}
 }
 
-// Set prefix option for string manipulation
+// Prefix set prefix for string manipulation
 func Prefix(value string) Option {
 	return func(t *opts) error {
 		t.prefix = &value
@@ -198,7 +205,7 @@ func Prefix(value string) Option {
 	}
 }
 
-// Set delimiter option for string manipulation
+// Delimiter set delimiter for string manipulation
 func Delimiter(value string) Option {
 	return func(t *opts) error {
 		t.delimiter = &value
@@ -206,6 +213,7 @@ func Delimiter(value string) Option {
 	}
 }
 
+// Type stores all information about underlying value.
 type Type struct {
 	rv   reflect.Value
 	kind reflect.Kind
@@ -245,7 +253,7 @@ func (t *Type) to(typeTo reflect.Kind) (nv NullInterface) {
 	return
 }
 
-// Determine whether a variable is zero
+// Empty determine whether a variable is zero
 func (t *Type) Empty() (nv NullBool) {
 	from := t.rv.Kind()
 	switch {
@@ -290,7 +298,7 @@ func (t *Type) Empty() (nv NullBool) {
 	return
 }
 
-// Determine whether a variable is equals with current "value" (same value, but can have different primitives types)
+// Equals determine whether a variable is equals with current "value" (same value, but can have different primitives types)
 // Primitives type is: int, uint, float, complex, bool
 func (t *Type) Equals(value interface{}) NullBool {
 	if vp := Of(value).to(t.rv.Kind()); vp.Valid() {
@@ -299,7 +307,7 @@ func (t *Type) Equals(value interface{}) NullBool {
 	return t.Identical(value)
 }
 
-// Determine whether a variable is identical with current "value" (same type and same value)
+// Identical determine whether a variable is identical with current "value" (same type and same value)
 func (t *Type) Identical(src interface{}) (nv NullBool) {
 	if !t.rv.IsValid() {
 		nv.Error = ErrUnexpectedValue
@@ -310,7 +318,7 @@ func (t *Type) Identical(src interface{}) (nv NullBool) {
 	return
 }
 
-// Get value as interface.
+// Interface returns value as interface.
 // Returns nil if value can't safely represents as interface
 func (t *Type) Interface() (nv NullInterface) {
 	nv = NullInterface{Error: t.err}
@@ -321,7 +329,7 @@ func (t *Type) Interface() (nv NullInterface) {
 	return
 }
 
-// Get the base for numeric conversion to string
+// OptionBase returns the base for numeric conversion to string
 func (t *Type) OptionBase() int {
 	if t.opts.base == nil {
 		return 0
@@ -329,7 +337,7 @@ func (t *Type) OptionBase() int {
 	return *t.opts.base
 }
 
-// Get float format option for float conversion to string
+// OptionFmtByte returns float format option for float conversion to string
 func (t *Type) OptionFmtByte() byte {
 	if t.opts.fmtByte == nil {
 		return 0
@@ -337,7 +345,7 @@ func (t *Type) OptionFmtByte() byte {
 	return *t.opts.fmtByte
 }
 
-// Get float precision for float conversion to string
+// OptionPrecision returns float precision for float conversion to string
 func (t *Type) OptionPrecision() int {
 	if t.opts.precision == nil {
 		return 0
@@ -345,12 +353,12 @@ func (t *Type) OptionPrecision() int {
 	return *t.opts.precision
 }
 
-// Underlying error.
+// Error returns Underlying error.
 func (t *Type) Error() error {
 	return t.err
 }
 
-// Create type converter from interface value.
+// Of create type converter from interface value.
 // This function recursive dereference value by a reference if value is a pointer
 func Of(value interface{}, options ...Option) *Type {
 	return NewType(value, nil, options...)
@@ -362,7 +370,7 @@ var (
 	dPrecision = -1
 )
 
-// New Type instance.
+// NewType create a Type instance with value.
 // This function recursive dereference value by a reference if value is a pointer
 func NewType(value interface{}, err error, options ...Option) *Type {
 	nt := &Type{}

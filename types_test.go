@@ -10,7 +10,7 @@ import (
 	"unsafe"
 )
 
-type JsonToken struct {
+type JSONToken struct {
 	Value interface{}
 	Typ   reflect.Type
 	Token []byte
@@ -18,7 +18,7 @@ type JsonToken struct {
 }
 
 var (
-	jsonTokenReflectType  = reflect.TypeOf(JsonToken{})
+	jsonTokenReflectType  = reflect.TypeOf(JSONToken{})
 	jsonTokenReflectTypes = []reflect.Type{jsonTokenReflectType}
 )
 
@@ -26,19 +26,19 @@ func init() {
 	// Test Data
 	dm := map[string]interface{}{"key": "Value"}
 	ds := []interface{}{1, 2, 3}
-	matrixSuite.Register(reflect.TypeOf(JsonToken{}), []dataItem{
-		{reflect.ValueOf(JsonToken{dm, reflect.TypeOf(dm), []byte(`{"key":"Value"}`), nil}), nil},
-		{reflect.ValueOf(JsonToken{ds, reflect.TypeOf(ds), []byte(`[1,2,3]`), nil}), nil},
-		{reflect.ValueOf(JsonToken{nil, nil, []byte(`{`), nil}), nil},
+	matrixSuite.Register(reflect.TypeOf(JSONToken{}), []dataItem{
+		{reflect.ValueOf(JSONToken{dm, reflect.TypeOf(dm), []byte(`{"key":"Value"}`), nil}), nil},
+		{reflect.ValueOf(JSONToken{ds, reflect.TypeOf(ds), []byte(`[1,2,3]`), nil}), nil},
+		{reflect.ValueOf(JSONToken{nil, nil, []byte(`{`), nil}), nil},
 	})
-	matrixSuite.Register(reflect.TypeOf(SqlValueType{}), []dataItem{
-		{reflect.ValueOf(SqlValueType{}), nil},
-		{reflect.ValueOf(SqlValueType{struct{}{}, struct{}{}}), nil},
+	matrixSuite.Register(reflect.TypeOf(SQLValueType{}), []dataItem{
+		{reflect.ValueOf(SQLValueType{}), nil},
+		{reflect.ValueOf(SQLValueType{struct{}{}, struct{}{}}), nil},
 	})
 	// Converters
-	// - from JsonToken to &Null*{}
+	// - from JSONToken to &Null*{}
 	matrixSuite.SetConverters(jsonTokenReflectTypes, nullReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
-		jt := from.(JsonToken)
+		jt := from.(JSONToken)
 		var v interface{}
 		if err := json.Unmarshal(jt.Token, &v); err != nil {
 			return nil, false
@@ -46,9 +46,9 @@ func init() {
 		v, c, _ := matrixSuite.Convert(v, to)
 		return v, c
 	})
-	// - from SqlValueType to &Null*{}
+	// - from SQLValueType to &Null*{}
 	matrixSuite.SetConverters(sqlValueReflectTypes, nullReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
-		sv := from.(SqlValueType)
+		sv := from.(SQLValueType)
 		if to == reflect.TypeOf(&NullInterface{}) {
 			if reflect.TypeOf(from) != to {
 				return nil, false
@@ -61,7 +61,7 @@ func init() {
 	matrixSuite.SetConverter(nil, jsonTokenReflectType, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		rv := reflect.ValueOf(from)
 		b, err := json.Marshal(from)
-		jt := JsonToken{from, rv.Type(), b, err}
+		jt := JSONToken{from, rv.Type(), b, err}
 		return jt, err == nil
 	})
 	matrixSuite.SetConverters(interfaceReflectTypes, sqlValueReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
@@ -284,6 +284,7 @@ func TestInterface(t *testing.T) {
 func TestEmpty(t *testing.T) {
 	ch := make(chan int, 1)
 	ch <- 1
+	var np *struct{}
 	testData := [][]interface{}{
 		{
 			[]interface{}{nil},
@@ -477,7 +478,7 @@ func TestEmpty(t *testing.T) {
 		},
 		{
 			[]interface{}{
-				unsafe.Pointer(uintptr(0)),
+				unsafe.Pointer(np),
 				dTypes[reflect.UnsafePointer],
 			},
 			[]bool{true, false},
@@ -589,8 +590,8 @@ func TestSetGetBase(t *testing.T) {
 	}
 }
 
-type SqlValueType struct {
-	SqlValue driver.Value
+type SQLValueType struct {
+	SQLValue driver.Value
 	Value    interface{}
 }
 

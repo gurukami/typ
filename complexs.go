@@ -10,7 +10,7 @@ const regexpComplexString = `(?i)\(?([+-]?\d+(?:\.\d+(?:e\+\d+)?)?)([+-]\d+(?:\.
 
 var regexpComplex = regexp.MustCompile(regexpComplexString)
 
-// Convert interface value to complex64.
+// Complex64 convert interface value to complex64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Complex64(defaultValue ...complex64) (nv NullComplex64) {
 	if nv.Error = t.err; t.err != nil {
@@ -23,7 +23,7 @@ func (t *Type) Complex64(defaultValue ...complex64) (nv NullComplex64) {
 	return
 }
 
-// Convert interface value to complex128
+// Complex convert interface value to complex128
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Complex(defaultValue ...complex128) (nv NullComplex) {
 	if nv.Error = t.err; t.err != nil {
@@ -80,7 +80,7 @@ func (t *Type) toComplex(typeTo reflect.Kind) (nv NullComplex) {
 	return
 }
 
-// Convert value from int64 to complex64.
+// IntComplex64 convert value from int64 to complex64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func IntComplex64(from int64, defaultValue ...complex64) (nv NullComplex64) {
 	if safe := isSafeIntToFloat(from, 32); !safe {
@@ -94,7 +94,7 @@ func IntComplex64(from int64, defaultValue ...complex64) (nv NullComplex64) {
 	return
 }
 
-// Convert value from int64 to complex128.
+// IntComplex convert value from int64 to complex128.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func IntComplex(from int64, defaultValue ...complex128) (nv NullComplex) {
 	if safe := isSafeIntToFloat(from, 64); !safe {
@@ -108,7 +108,7 @@ func IntComplex(from int64, defaultValue ...complex128) (nv NullComplex) {
 	return
 }
 
-// Convert value from uint64 to complex64.
+// UintComplex64 convert value from uint64 to complex64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func UintComplex64(from uint64, defaultValue ...complex64) (nv NullComplex64) {
 	if safe := isSafeUintToFloat(from, 32); !safe {
@@ -122,7 +122,7 @@ func UintComplex64(from uint64, defaultValue ...complex64) (nv NullComplex64) {
 	return
 }
 
-// Convert value from uint64 to complex128.
+// UintComplex convert value from uint64 to complex128.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func UintComplex(from uint64, defaultValue ...complex128) (nv NullComplex) {
 	if safe := isSafeUintToFloat(from, 64); !safe {
@@ -136,13 +136,13 @@ func UintComplex(from uint64, defaultValue ...complex128) (nv NullComplex) {
 	return
 }
 
-// Convert value from float32 to complex64.
+// Float32Complex64 convert value from float32 to complex64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Float32Complex64(from float32, defaultValue ...complex64) (nv NullComplex64) {
 	return FloatComplex64(float64(from), defaultValue...)
 }
 
-// Convert value from float64 to complex64.
+// FloatComplex64 convert value from float64 to complex64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func FloatComplex64(from float64, defaultValue ...complex64) (nv NullComplex64) {
 	if safe := isSafeFloat(from, 32); !safe {
@@ -156,7 +156,7 @@ func FloatComplex64(from float64, defaultValue ...complex64) (nv NullComplex64) 
 	return
 }
 
-// Convert value from complex128 to complex64.
+// Complex64 convert value from complex128 to complex64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Complex64(from complex128, defaultValue ...complex64) (nv NullComplex64) {
 	if safe := isSafeComplex(from, 32); !safe {
@@ -170,7 +170,7 @@ func Complex64(from complex128, defaultValue ...complex64) (nv NullComplex64) {
 	return
 }
 
-// Convert value from string to complex64.
+// StringComplex64 convert value from string to complex64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringComplex64(from string, defaultValue ...complex64) (nv NullComplex64) {
 	matches := regexpComplex.FindStringSubmatch(from)
@@ -181,7 +181,7 @@ func StringComplex64(from string, defaultValue ...complex64) (nv NullComplex64) 
 	}
 	fr, re := strconv.ParseFloat(matches[1], 32)
 	fi, ie := strconv.ParseFloat(matches[2], 32)
-	if re != nil  || ie != nil{
+	if re != nil || ie != nil {
 		nv.Error = ErrUnexpectedValue
 	}
 	if defaultComplex64(&nv, defaultValue...) {
@@ -192,7 +192,7 @@ func StringComplex64(from string, defaultValue ...complex64) (nv NullComplex64) 
 	return
 }
 
-// Convert value from string to complex128.
+// StringComplex convert value from string to complex128.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringComplex(from string, defaultValue ...complex128) (nv NullComplex) {
 	matches := regexpComplex.FindStringSubmatch(from)
@@ -203,7 +203,7 @@ func StringComplex(from string, defaultValue ...complex128) (nv NullComplex) {
 	}
 	fr, re := strconv.ParseFloat(matches[1], 64)
 	fi, ie := strconv.ParseFloat(matches[2], 64)
-	if re != nil  || ie != nil{
+	if re != nil || ie != nil {
 		nv.Error = ErrUnexpectedValue
 	}
 	if defaultComplex(&nv, defaultValue...) {
