@@ -8,7 +8,7 @@ import (
 
 var (
 	// ErrBaseInvalid is returned when a base option has invalid range
-	ErrBaseInvalid    = ErrorInvalidArgument(errors.New("base option must be in range 2 <= base <= 36"))
+	ErrBaseInvalid = ErrorInvalidArgument(errors.New("base option must be in range 2 <= base <= 36"))
 	// ErrFmtByteInvalid is returned when a fmt byte has invalid value
 	ErrFmtByteInvalid = ErrorInvalidArgument(errors.New("fmtByte option must be one of 'b', 'e', 'E', 'f', 'g', 'G'"))
 )
@@ -33,13 +33,13 @@ type (
 	}
 
 	// Option is interface function used as argument value for type conversion configuration
-	Option              func(*opts) error
+	Option func(*opts) error
 	// IntStringOption is interface function used as argument value for type conversion configuration from int to string
-	IntStringOption     func(*intStrOpts) error
+	IntStringOption func(*intStrOpts) error
 	// UintStringOption is interface function used as argument value for type conversion configuration from uint to string
-	UintStringOption    func(*uintStrOpts) error
+	UintStringOption func(*uintStrOpts) error
 	// FloatStringOption is interface function used as argument value for type conversion configuration from float to string
-	FloatStringOption   func(*floatStrOpts) error
+	FloatStringOption func(*floatStrOpts) error
 	// ComplexStringOption is interface function used as argument value for type conversion configuration from complex to string
 	ComplexStringOption func(*complexStrOpts) error
 )
