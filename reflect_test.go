@@ -24,7 +24,7 @@ func init() {
 		{reflect.ValueOf(chBuff), nil},
 		{reflect.ValueOf(closedCh), nil},
 	})
-	var pv interface{} = nil
+	var pv interface{}
 	ptr := &pv
 	up := unsafe.Pointer(ptr)
 	uptr := uintptr(up)

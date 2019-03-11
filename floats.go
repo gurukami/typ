@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-// Convert interface value to float32.
+// Float32 convert interface value to float32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Float32(defaultValue ...float32) (nv NullFloat32) {
 	if nv.Error = t.err; t.err != nil {
@@ -21,7 +21,7 @@ func (t *Type) Float32(defaultValue ...float32) (nv NullFloat32) {
 	return
 }
 
-// Convert interface value to float64.
+// Float convert interface value to float64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Float(defaultValue ...float64) (nv NullFloat) {
 	if nv.Error = t.err; t.err != nil {
@@ -95,7 +95,7 @@ func (t *Type) toFloat(typeTo reflect.Kind) (nv NullFloat) {
 	return
 }
 
-// Convert value from int to float32.
+// IntFloat32 convert value from int to float32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func IntFloat32(from int64, defaultValue ...float32) (nv NullFloat32) {
 	if safe := isSafeIntToFloat(from, 32); !safe {
@@ -109,7 +109,7 @@ func IntFloat32(from int64, defaultValue ...float32) (nv NullFloat32) {
 	return
 }
 
-// Convert value from int to float64.
+// IntFloat convert value from int to float64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func IntFloat(from int64, defaultValue ...float64) (nv NullFloat) {
 	if safe := isSafeIntToFloat(from, 64); !safe {
@@ -123,7 +123,7 @@ func IntFloat(from int64, defaultValue ...float64) (nv NullFloat) {
 	return
 }
 
-// Convert value from uint to float32.
+// UintFloat32 convert value from uint to float32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func UintFloat32(from uint64, defaultValue ...float32) (nv NullFloat32) {
 	if safe := isSafeUintToFloat(from, 32); !safe {
@@ -137,7 +137,7 @@ func UintFloat32(from uint64, defaultValue ...float32) (nv NullFloat32) {
 	return
 }
 
-// Convert value from uint to float64.
+// UintFloat convert value from uint to float64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func UintFloat(from uint64, defaultValue ...float64) (nv NullFloat) {
 	if safe := isSafeUintToFloat(from, 64); !safe {
@@ -151,7 +151,7 @@ func UintFloat(from uint64, defaultValue ...float64) (nv NullFloat) {
 	return
 }
 
-// Convert value from float64 to float32.
+// Float32 convert value from float64 to float32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Float32(from float64, defaultValue ...float32) (nv NullFloat32) {
 	if safe := isSafeFloat(from, 32); !safe {
@@ -165,7 +165,7 @@ func Float32(from float64, defaultValue ...float32) (nv NullFloat32) {
 	return
 }
 
-// Convert value from complex64 to float32.
+// Complex64Float32 convert value from complex64 to float32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Complex64Float32(from complex64, defaultValue ...float32) (nv NullFloat32) {
 	if safe := isSafeComplexToFloat(complex128(from), 32); !safe {
@@ -179,7 +179,7 @@ func Complex64Float32(from complex64, defaultValue ...float32) (nv NullFloat32) 
 	return
 }
 
-// Convert value from complex64 to float64.
+// Complex64Float64 convert value from complex64 to float64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Complex64Float64(from complex64, defaultValue ...float64) (nv NullFloat) {
 	if safe := isSafeComplexToFloat(complex128(from), 64); !safe {
@@ -193,7 +193,7 @@ func Complex64Float64(from complex64, defaultValue ...float64) (nv NullFloat) {
 	return
 }
 
-// Convert value from complex128 to float32.
+// ComplexFloat32 convert value from complex128 to float32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func ComplexFloat32(from complex128, defaultValue ...float32) (nv NullFloat32) {
 	if safe := isSafeComplexToFloat(from, 32); !safe {
@@ -207,7 +207,7 @@ func ComplexFloat32(from complex128, defaultValue ...float32) (nv NullFloat32) {
 	return
 }
 
-// Convert value from complex128 to float64.
+// ComplexFloat64 convert value from complex128 to float64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func ComplexFloat64(from complex128, defaultValue ...float64) (nv NullFloat) {
 	if safe := isSafeComplexToFloat(from, 64); !safe {
@@ -221,7 +221,7 @@ func ComplexFloat64(from complex128, defaultValue ...float64) (nv NullFloat) {
 	return
 }
 
-// Convert value from string to float32.
+// StringFloat32 convert value from string to float32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringFloat32(from string, defaultValue ...float32) (nv NullFloat32) {
 	pv, err := strconv.ParseFloat(from, 32)
@@ -234,7 +234,7 @@ func StringFloat32(from string, defaultValue ...float32) (nv NullFloat32) {
 	return
 }
 
-// Convert value from string to float64.
+// StringFloat convert value from string to float64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringFloat(from string, defaultValue ...float64) (nv NullFloat) {
 	pv, err := strconv.ParseFloat(from, 64)

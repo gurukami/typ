@@ -5,6 +5,7 @@ import (
 	"strconv"
 )
 
+// Min and Max values in primitive types
 const (
 	MinFloat32        = float32(-3.40282346638528859811704183484516925440e+38)
 	MaxFloat32        = float32(3.40282346638528859811704183484516925440e+38)
@@ -31,7 +32,7 @@ const (
 	MaxUint           = uint64(18446744073709551615)
 )
 
-// Convert from any numeric type to string in the given base
+// NumericToString convert from any numeric type to string in the given base
 // for 2 <= base <= 36. The result uses the lower-case letters 'a' to 'z'
 // for digit values >= 10.
 // The format fmt is one of

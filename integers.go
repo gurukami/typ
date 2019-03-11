@@ -5,7 +5,7 @@ import (
 	"strconv"
 )
 
-// Convert interface value to int.
+// Int convert interface value to int.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Int(defaultValue ...int) (nv NullInt) {
 	if nv.Error = t.err; t.err != nil {
@@ -21,7 +21,7 @@ func (t *Type) Int(defaultValue ...int) (nv NullInt) {
 	return
 }
 
-// Convert interface value to int8.
+// Int8 convert interface value to int8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Int8(defaultValue ...int8) (nv NullInt8) {
 	if nv.Error = t.err; t.err != nil {
@@ -37,7 +37,7 @@ func (t *Type) Int8(defaultValue ...int8) (nv NullInt8) {
 	return
 }
 
-// Convert interface value to int16.
+// Int16 convert interface value to int16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Int16(defaultValue ...int16) (nv NullInt16) {
 	if nv.Error = t.err; t.err != nil {
@@ -53,7 +53,7 @@ func (t *Type) Int16(defaultValue ...int16) (nv NullInt16) {
 	return
 }
 
-// Convert interface value to int32.
+// Int32 convert interface value to int32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Int32(defaultValue ...int32) (nv NullInt32) {
 	if nv.Error = t.err; t.err != nil {
@@ -69,7 +69,7 @@ func (t *Type) Int32(defaultValue ...int32) (nv NullInt32) {
 	return
 }
 
-// Convert interface value to int64.
+// Int64 convert interface value to int64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Int64(defaultValue ...int64) (nv NullInt64) {
 	if nv.Error = t.err; t.err != nil {
@@ -85,7 +85,7 @@ func (t *Type) Int64(defaultValue ...int64) (nv NullInt64) {
 	return
 }
 
-// Convert interface value to uint.
+// Uint convert interface value to uint.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Uint(defaultValue ...uint) (nv NullUint) {
 	if nv.Error = t.err; t.err != nil {
@@ -101,7 +101,7 @@ func (t *Type) Uint(defaultValue ...uint) (nv NullUint) {
 	return
 }
 
-// Convert interface value to uint8.
+// Uint8 convert interface value to uint8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Uint8(defaultValue ...uint8) (nv NullUint8) {
 	if nv.Error = t.err; t.err != nil {
@@ -117,7 +117,7 @@ func (t *Type) Uint8(defaultValue ...uint8) (nv NullUint8) {
 	return
 }
 
-// Convert interface value to uint16.
+// Uint16 convert interface value to uint16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Uint16(defaultValue ...uint16) (nv NullUint16) {
 	if nv.Error = t.err; t.err != nil {
@@ -133,7 +133,7 @@ func (t *Type) Uint16(defaultValue ...uint16) (nv NullUint16) {
 	return
 }
 
-// Convert interface value to uint32.
+// Uint32 convert interface value to uint32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Uint32(defaultValue ...uint32) (nv NullUint32) {
 	if nv.Error = t.err; t.err != nil {
@@ -149,7 +149,7 @@ func (t *Type) Uint32(defaultValue ...uint32) (nv NullUint32) {
 	return
 }
 
-// Convert interface value to uint64.
+// Uint64 convert interface value to uint64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func (t *Type) Uint64(defaultValue ...uint64) (nv NullUint64) {
 	if nv.Error = t.err; t.err != nil {
@@ -291,7 +291,7 @@ func (t *Type) toUint(typeTo reflect.Kind) (nv NullUint64) {
 	return
 }
 
-// Convert value from int64 to int32.
+// Int32 convert value from int64 to int32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Int32(from int64, defaultValue ...int32) (nv NullInt32) {
 	if safe := isSafeInt(from, 32); !safe {
@@ -305,7 +305,7 @@ func Int32(from int64, defaultValue ...int32) (nv NullInt32) {
 	return
 }
 
-// Convert value from int64 to int16.
+// Int16 convert value from int64 to int16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Int16(from int64, defaultValue ...int16) (nv NullInt16) {
 	if safe := isSafeInt(from, 16); !safe {
@@ -319,7 +319,7 @@ func Int16(from int64, defaultValue ...int16) (nv NullInt16) {
 	return
 }
 
-// Convert value from int64 to int8.
+// Int8 convert value from int64 to int8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Int8(from int64, defaultValue ...int8) (nv NullInt8) {
 	if safe := isSafeInt(from, 8); !safe {
@@ -333,7 +333,7 @@ func Int8(from int64, defaultValue ...int8) (nv NullInt8) {
 	return
 }
 
-// Convert value from int64 to uint64.
+// IntUint64 convert value from int64 to uint64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func IntUint64(from int64, defaultValue ...uint64) (nv NullUint64) {
 	if safe := isSafeIntToUint(from, 64); !safe {
@@ -347,7 +347,7 @@ func IntUint64(from int64, defaultValue ...uint64) (nv NullUint64) {
 	return
 }
 
-// Convert value from int64 to uint32.
+// IntUint32 convert value from int64 to uint32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func IntUint32(from int64, defaultValue ...uint32) (nv NullUint32) {
 	if safe := isSafeIntToUint(from, 32); !safe {
@@ -361,7 +361,7 @@ func IntUint32(from int64, defaultValue ...uint32) (nv NullUint32) {
 	return
 }
 
-// Convert value from int64 to uint16.
+// IntUint16 convert value from int64 to uint16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func IntUint16(from int64, defaultValue ...uint16) (nv NullUint16) {
 	if safe := isSafeIntToUint(from, 16); !safe {
@@ -375,7 +375,7 @@ func IntUint16(from int64, defaultValue ...uint16) (nv NullUint16) {
 	return
 }
 
-// Convert value from int64 to uint8.
+// IntUint8 convert value from int64 to uint8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func IntUint8(from int64, defaultValue ...uint8) (nv NullUint8) {
 	if safe := isSafeIntToUint(from, 8); !safe {
@@ -389,7 +389,7 @@ func IntUint8(from int64, defaultValue ...uint8) (nv NullUint8) {
 	return
 }
 
-// Convert value from uint64 to int64.
+// UintInt64 convert value from uint64 to int64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func UintInt64(from uint64, defaultValue ...int64) (nv NullInt64) {
 	if safe := isSafeUintToInt(from, 64); !safe {
@@ -403,7 +403,7 @@ func UintInt64(from uint64, defaultValue ...int64) (nv NullInt64) {
 	return
 }
 
-// Convert value from uint64 to int32.
+// UintInt32 convert value from uint64 to int32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func UintInt32(from uint64, defaultValue ...int32) (nv NullInt32) {
 	if safe := isSafeUintToInt(from, 32); !safe {
@@ -417,7 +417,7 @@ func UintInt32(from uint64, defaultValue ...int32) (nv NullInt32) {
 	return
 }
 
-// Convert value from uint64 to int16.
+// UintInt16 convert value from uint64 to int16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func UintInt16(from uint64, defaultValue ...int16) (nv NullInt16) {
 	if safe := isSafeUintToInt(from, 16); !safe {
@@ -431,7 +431,7 @@ func UintInt16(from uint64, defaultValue ...int16) (nv NullInt16) {
 	return
 }
 
-// Convert value from uint64 to int8.
+// UintInt8 convert value from uint64 to int8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func UintInt8(from uint64, defaultValue ...int8) (nv NullInt8) {
 	if safe := isSafeUintToInt(from, 8); !safe {
@@ -445,7 +445,7 @@ func UintInt8(from uint64, defaultValue ...int8) (nv NullInt8) {
 	return
 }
 
-// Convert value from uint64 to uint32.
+// Uint32 convert value from uint64 to uint32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Uint32(from uint64, defaultValue ...uint32) (nv NullUint32) {
 	if safe := isSafeUint(from, 32); !safe {
@@ -459,7 +459,7 @@ func Uint32(from uint64, defaultValue ...uint32) (nv NullUint32) {
 	return
 }
 
-// Convert value from uint64 to uint16.
+// Uint16 convert value from uint64 to uint16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Uint16(from uint64, defaultValue ...uint16) (nv NullUint16) {
 	if safe := isSafeUint(from, 16); !safe {
@@ -473,7 +473,7 @@ func Uint16(from uint64, defaultValue ...uint16) (nv NullUint16) {
 	return
 }
 
-// Convert value from uint64 to uint8.
+// Uint8 convert value from uint64 to uint8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Uint8(from uint64, defaultValue ...uint8) (nv NullUint8) {
 	if safe := isSafeUint(from, 8); !safe {
@@ -487,7 +487,7 @@ func Uint8(from uint64, defaultValue ...uint8) (nv NullUint8) {
 	return
 }
 
-// Convert value from float32 to int.
+// Float32Int convert value from float32 to int.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Float32Int(from float32, defaultValue ...int) (nv NullInt) {
 	if safe := isSafeFloatToInt(float64(from), 32, 64); !safe {
@@ -501,7 +501,7 @@ func Float32Int(from float32, defaultValue ...int) (nv NullInt) {
 	return
 }
 
-// Convert value from float32 to int64.
+// Float32Int64 convert value from float32 to int64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Float32Int64(from float32, defaultValue ...int64) (nv NullInt64) {
 	if safe := isSafeFloatToInt(float64(from), 32, 64); !safe {
@@ -515,7 +515,7 @@ func Float32Int64(from float32, defaultValue ...int64) (nv NullInt64) {
 	return
 }
 
-// Convert value from float32 to int32.
+// Float32Int32 convert value from float32 to int32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Float32Int32(from float32, defaultValue ...int32) (nv NullInt32) {
 	if safe := isSafeFloatToInt(float64(from), 32, 32); !safe {
@@ -529,7 +529,7 @@ func Float32Int32(from float32, defaultValue ...int32) (nv NullInt32) {
 	return
 }
 
-// Convert value from float32 to int16.
+// Float32Int16 convert value from float32 to int16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Float32Int16(from float32, defaultValue ...int16) (nv NullInt16) {
 	if safe := isSafeFloatToInt(float64(from), 32, 16); !safe {
@@ -543,7 +543,7 @@ func Float32Int16(from float32, defaultValue ...int16) (nv NullInt16) {
 	return
 }
 
-// Convert value from float32 to int8.
+// Float32Int8 convert value from float32 to int8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Float32Int8(from float32, defaultValue ...int8) (nv NullInt8) {
 	if safe := isSafeFloatToInt(float64(from), 32, 8); !safe {
@@ -557,7 +557,7 @@ func Float32Int8(from float32, defaultValue ...int8) (nv NullInt8) {
 	return
 }
 
-// Convert value from float32 to uint.
+// Float32Uint convert value from float32 to uint.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Float32Uint(from float32, defaultValue ...uint) (nv NullUint) {
 	if safe := isSafeFloatToUint(float64(from), 32, 64); !safe {
@@ -571,7 +571,7 @@ func Float32Uint(from float32, defaultValue ...uint) (nv NullUint) {
 	return
 }
 
-// Convert value from float32 to uint64.
+// Float32Uint64 convert value from float32 to uint64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Float32Uint64(from float32, defaultValue ...uint64) (nv NullUint64) {
 	if safe := isSafeFloatToUint(float64(from), 32, 64); !safe {
@@ -585,7 +585,7 @@ func Float32Uint64(from float32, defaultValue ...uint64) (nv NullUint64) {
 	return
 }
 
-// Convert value from float32 to uint32.
+// Float32Uint32 convert value from float32 to uint32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Float32Uint32(from float32, defaultValue ...uint32) (nv NullUint32) {
 	if safe := isSafeFloatToUint(float64(from), 32, 32); !safe {
@@ -599,7 +599,7 @@ func Float32Uint32(from float32, defaultValue ...uint32) (nv NullUint32) {
 	return
 }
 
-// Convert value from float32 to uint16.
+// Float32Uint16 convert value from float32 to uint16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Float32Uint16(from float32, defaultValue ...uint16) (nv NullUint16) {
 	if safe := isSafeFloatToUint(float64(from), 32, 16); !safe {
@@ -613,7 +613,7 @@ func Float32Uint16(from float32, defaultValue ...uint16) (nv NullUint16) {
 	return
 }
 
-// Convert value from float32 to uint8.
+// Float32Uint8 convert value from float32 to uint8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Float32Uint8(from float32, defaultValue ...uint8) (nv NullUint8) {
 	if safe := isSafeFloatToUint(float64(from), 32, 8); !safe {
@@ -627,7 +627,7 @@ func Float32Uint8(from float32, defaultValue ...uint8) (nv NullUint8) {
 	return
 }
 
-// Convert value from float64 to int.
+// FloatInt convert value from float64 to int.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func FloatInt(from float64, defaultValue ...int) (nv NullInt) {
 	if safe := isSafeFloatToInt(float64(from), 64, 64); !safe {
@@ -641,7 +641,7 @@ func FloatInt(from float64, defaultValue ...int) (nv NullInt) {
 	return
 }
 
-// Convert value from float64 to int64.
+// FloatInt64 convert value from float64 to int64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func FloatInt64(from float64, defaultValue ...int64) (nv NullInt64) {
 	if safe := isSafeFloatToInt(float64(from), 64, 64); !safe {
@@ -655,7 +655,7 @@ func FloatInt64(from float64, defaultValue ...int64) (nv NullInt64) {
 	return
 }
 
-// Convert value from float64 to int32.
+// FloatInt32 convert value from float64 to int32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func FloatInt32(from float64, defaultValue ...int32) (nv NullInt32) {
 	if safe := isSafeFloatToInt(float64(from), 64, 32); !safe {
@@ -669,7 +669,7 @@ func FloatInt32(from float64, defaultValue ...int32) (nv NullInt32) {
 	return
 }
 
-// Convert value from float64 to int16.
+// FloatInt16 convert value from float64 to int16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func FloatInt16(from float64, defaultValue ...int16) (nv NullInt16) {
 	if safe := isSafeFloatToInt(float64(from), 32, 16); !safe {
@@ -683,7 +683,7 @@ func FloatInt16(from float64, defaultValue ...int16) (nv NullInt16) {
 	return
 }
 
-// Convert value from float64 to int8.
+// FloatInt8 convert value from float64 to int8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func FloatInt8(from float64, defaultValue ...int8) (nv NullInt8) {
 	if safe := isSafeFloatToInt(float64(from), 32, 8); !safe {
@@ -697,7 +697,7 @@ func FloatInt8(from float64, defaultValue ...int8) (nv NullInt8) {
 	return
 }
 
-// Convert value from float64 to uint.
+// FloatUint convert value from float64 to uint.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func FloatUint(from float64, defaultValue ...uint) (nv NullUint) {
 	if safe := isSafeFloatToUint(float64(from), 64, 64); !safe {
@@ -711,7 +711,7 @@ func FloatUint(from float64, defaultValue ...uint) (nv NullUint) {
 	return
 }
 
-// Convert value from float64 to uint64.
+// FloatUint64 convert value from float64 to uint64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func FloatUint64(from float64, defaultValue ...uint64) (nv NullUint64) {
 	if safe := isSafeFloatToUint(float64(from), 64, 64); !safe {
@@ -725,7 +725,7 @@ func FloatUint64(from float64, defaultValue ...uint64) (nv NullUint64) {
 	return
 }
 
-// Convert value from float64 to uint32.
+// FloatUint32 convert value from float64 to uint32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func FloatUint32(from float64, defaultValue ...uint32) (nv NullUint32) {
 	if safe := isSafeFloatToUint(float64(from), 64, 32); !safe {
@@ -739,7 +739,7 @@ func FloatUint32(from float64, defaultValue ...uint32) (nv NullUint32) {
 	return
 }
 
-// Convert value from float64 to uint16.
+// FloatUint16 convert value from float64 to uint16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func FloatUint16(from float64, defaultValue ...uint16) (nv NullUint16) {
 	if safe := isSafeFloatToUint(float64(from), 64, 16); !safe {
@@ -753,7 +753,7 @@ func FloatUint16(from float64, defaultValue ...uint16) (nv NullUint16) {
 	return
 }
 
-// Convert value from float64 to uint8.
+// FloatUint8 convert value from float64 to uint8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func FloatUint8(from float64, defaultValue ...uint8) (nv NullUint8) {
 	if safe := isSafeFloatToUint(float64(from), 64, 8); !safe {
@@ -767,7 +767,7 @@ func FloatUint8(from float64, defaultValue ...uint8) (nv NullUint8) {
 	return
 }
 
-// Convert value from complex64 to int.
+// Complex64Int convert value from complex64 to int.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Complex64Int(from complex64, defaultValue ...int) (nv NullInt) {
 	fr := float32(real(from))
@@ -784,7 +784,7 @@ func Complex64Int(from complex64, defaultValue ...int) (nv NullInt) {
 	return
 }
 
-// Convert value from complex64 to int64.
+// Complex64Int64 convert value from complex64 to int64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Complex64Int64(from complex64, defaultValue ...int64) (nv NullInt64) {
 	fr := float32(real(from))
@@ -801,7 +801,7 @@ func Complex64Int64(from complex64, defaultValue ...int64) (nv NullInt64) {
 	return
 }
 
-// Convert value from complex64 to int32.
+// Complex64Int32 convert value from complex64 to int32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Complex64Int32(from complex64, defaultValue ...int32) (nv NullInt32) {
 	fr := float32(real(from))
@@ -818,7 +818,7 @@ func Complex64Int32(from complex64, defaultValue ...int32) (nv NullInt32) {
 	return
 }
 
-// Convert value from complex64 to int16.
+// Complex64Int16 convert value from complex64 to int16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Complex64Int16(from complex64, defaultValue ...int16) (nv NullInt16) {
 	fr := float32(real(from))
@@ -835,7 +835,7 @@ func Complex64Int16(from complex64, defaultValue ...int16) (nv NullInt16) {
 	return
 }
 
-// Convert value from complex64 to int8.
+// Complex64Int8 convert value from complex64 to int8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Complex64Int8(from complex64, defaultValue ...int8) (nv NullInt8) {
 	fr := float32(real(from))
@@ -852,7 +852,7 @@ func Complex64Int8(from complex64, defaultValue ...int8) (nv NullInt8) {
 	return
 }
 
-// Convert value from complex64 to uint.
+// Complex64Uint convert value from complex64 to uint.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Complex64Uint(from complex64, defaultValue ...uint) (nv NullUint) {
 	fr := float32(real(from))
@@ -869,7 +869,7 @@ func Complex64Uint(from complex64, defaultValue ...uint) (nv NullUint) {
 	return
 }
 
-// Convert value from complex64 to uint64.
+// Complex64Uint64 convert value from complex64 to uint64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Complex64Uint64(from complex64, defaultValue ...uint64) (nv NullUint64) {
 	fr := float32(real(from))
@@ -888,7 +888,7 @@ func Complex64Uint64(from complex64, defaultValue ...uint64) (nv NullUint64) {
 	return
 }
 
-// Convert value from complex64 to uint32.
+// Complex64Uint32 convert value from complex64 to uint32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Complex64Uint32(from complex64, defaultValue ...uint32) (nv NullUint32) {
 	fr := float32(real(from))
@@ -905,7 +905,7 @@ func Complex64Uint32(from complex64, defaultValue ...uint32) (nv NullUint32) {
 	return
 }
 
-// Convert value from complex64 to uint16.
+// Complex64Uint16 convert value from complex64 to uint16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Complex64Uint16(from complex64, defaultValue ...uint16) (nv NullUint16) {
 	fr := float32(real(from))
@@ -922,7 +922,7 @@ func Complex64Uint16(from complex64, defaultValue ...uint16) (nv NullUint16) {
 	return
 }
 
-// Convert value from complex64 to uint8.
+// Complex64Uint8 convert value from complex64 to uint8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func Complex64Uint8(from complex64, defaultValue ...uint8) (nv NullUint8) {
 	fr := float32(real(from))
@@ -939,10 +939,10 @@ func Complex64Uint8(from complex64, defaultValue ...uint8) (nv NullUint8) {
 	return
 }
 
-// Convert value from complex128 to int.
+// ComplexInt convert value from complex128 to int.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func ComplexInt(from complex128, defaultValue ...int) (nv NullInt) {
-	fr, vi:= float64(real(from)), float64(imag(from))
+	fr, vi := float64(real(from)), float64(imag(from))
 	cv := FloatInt(fr, defaultValue...)
 	nv.Error = cv.Error
 	if vi != 0 {
@@ -955,10 +955,10 @@ func ComplexInt(from complex128, defaultValue ...int) (nv NullInt) {
 	return
 }
 
-// Convert value from complex128 to int64.
+// ComplexInt64 convert value from complex128 to int64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func ComplexInt64(from complex128, defaultValue ...int64) (nv NullInt64) {
-	fr, vi:= float64(real(from)), float64(imag(from))
+	fr, vi := float64(real(from)), float64(imag(from))
 	cv := FloatInt64(fr, defaultValue...)
 	nv.Error = cv.Error
 	if vi != 0 {
@@ -971,10 +971,10 @@ func ComplexInt64(from complex128, defaultValue ...int64) (nv NullInt64) {
 	return
 }
 
-// Convert value from complex128 to int32.
+// ComplexInt32 convert value from complex128 to int32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func ComplexInt32(from complex128, defaultValue ...int32) (nv NullInt32) {
-	fr, vi:= float64(real(from)), float64(imag(from))
+	fr, vi := float64(real(from)), float64(imag(from))
 	cv := FloatInt32(fr, defaultValue...)
 	nv.Error = cv.Error
 	if vi != 0 {
@@ -987,10 +987,10 @@ func ComplexInt32(from complex128, defaultValue ...int32) (nv NullInt32) {
 	return
 }
 
-// Convert value from complex128 to int16.
+// ComplexInt16 convert value from complex128 to int16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func ComplexInt16(from complex128, defaultValue ...int16) (nv NullInt16) {
-	fr, vi:= float64(real(from)), float64(imag(from))
+	fr, vi := float64(real(from)), float64(imag(from))
 	cv := FloatInt16(fr, defaultValue...)
 	nv.Error = cv.Error
 	if vi != 0 {
@@ -1003,10 +1003,10 @@ func ComplexInt16(from complex128, defaultValue ...int16) (nv NullInt16) {
 	return
 }
 
-// Convert value from complex128 to int8.
+// ComplexInt8 convert value from complex128 to int8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func ComplexInt8(from complex128, defaultValue ...int8) (nv NullInt8) {
-	fr, vi:= float64(real(from)), float64(imag(from))
+	fr, vi := float64(real(from)), float64(imag(from))
 	cv := FloatInt8(fr, defaultValue...)
 	nv.Error = cv.Error
 	if vi != 0 {
@@ -1019,10 +1019,10 @@ func ComplexInt8(from complex128, defaultValue ...int8) (nv NullInt8) {
 	return
 }
 
-// Convert value from complex128 to uint.
+// ComplexUint convert value from complex128 to uint.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func ComplexUint(from complex128, defaultValue ...uint) (nv NullUint) {
-	fr, vi:= float64(real(from)), float64(imag(from))
+	fr, vi := float64(real(from)), float64(imag(from))
 	cv := FloatUint(fr, defaultValue...)
 	nv.Error = cv.Error
 	if vi != 0 {
@@ -1035,10 +1035,10 @@ func ComplexUint(from complex128, defaultValue ...uint) (nv NullUint) {
 	return
 }
 
-// Convert value from complex128 to uint64.
+// ComplexUint64 convert value from complex128 to uint64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func ComplexUint64(from complex128, defaultValue ...uint64) (nv NullUint64) {
-	fr, vi:= float64(real(from)), float64(imag(from))
+	fr, vi := float64(real(from)), float64(imag(from))
 	cv := FloatUint64(fr, defaultValue...)
 	nv.Error = cv.Error
 	if vi != 0 {
@@ -1051,10 +1051,10 @@ func ComplexUint64(from complex128, defaultValue ...uint64) (nv NullUint64) {
 	return
 }
 
-// Convert value from complex128 to uint32.
+// ComplexUint32 convert value from complex128 to uint32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func ComplexUint32(from complex128, defaultValue ...uint32) (nv NullUint32) {
-	fr, vi:= float64(real(from)), float64(imag(from))
+	fr, vi := float64(real(from)), float64(imag(from))
 	cv := FloatUint32(fr, defaultValue...)
 	nv.Error = cv.Error
 	if vi != 0 {
@@ -1067,10 +1067,10 @@ func ComplexUint32(from complex128, defaultValue ...uint32) (nv NullUint32) {
 	return
 }
 
-// Convert value from complex128 to uint16.
+// ComplexUint16 convert value from complex128 to uint16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func ComplexUint16(from complex128, defaultValue ...uint16) (nv NullUint16) {
-	fr, vi:= float64(real(from)), float64(imag(from))
+	fr, vi := float64(real(from)), float64(imag(from))
 	cv := FloatUint16(fr, defaultValue...)
 	nv.Error = cv.Error
 	if vi != 0 {
@@ -1083,10 +1083,10 @@ func ComplexUint16(from complex128, defaultValue ...uint16) (nv NullUint16) {
 	return
 }
 
-// Convert value from complex128 to uint8.
+// ComplexUint8 convert value from complex128 to uint8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func ComplexUint8(from complex128, defaultValue ...uint8) (nv NullUint8) {
-	fr, vi:= float64(real(from)), float64(imag(from))
+	fr, vi := float64(real(from)), float64(imag(from))
 	cv := FloatUint8(fr, defaultValue...)
 	nv.Error = cv.Error
 	if vi != 0 {
@@ -1099,7 +1099,7 @@ func ComplexUint8(from complex128, defaultValue ...uint8) (nv NullUint8) {
 	return
 }
 
-// Convert value from string to int.
+// StringInt convert value from string to int.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringInt(from string, defaultValue ...int) (nv NullInt) {
 	pv, err := strconv.ParseInt(from, 0, 64)
@@ -1112,7 +1112,7 @@ func StringInt(from string, defaultValue ...int) (nv NullInt) {
 	return
 }
 
-// Convert value from string to int64.
+// StringInt64 convert value from string to int64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringInt64(from string, defaultValue ...int64) (nv NullInt64) {
 	pv, err := strconv.ParseInt(from, 0, 64)
@@ -1125,7 +1125,7 @@ func StringInt64(from string, defaultValue ...int64) (nv NullInt64) {
 	return
 }
 
-// Convert value from string to int32.
+// StringInt32 convert value from string to int32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringInt32(from string, defaultValue ...int32) (nv NullInt32) {
 	pv, err := strconv.ParseInt(from, 0, 32)
@@ -1138,7 +1138,7 @@ func StringInt32(from string, defaultValue ...int32) (nv NullInt32) {
 	return
 }
 
-// Convert value from string to int16.
+// StringInt16 convert value from string to int16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringInt16(from string, defaultValue ...int16) (nv NullInt16) {
 	pv, err := strconv.ParseInt(from, 0, 16)
@@ -1151,7 +1151,7 @@ func StringInt16(from string, defaultValue ...int16) (nv NullInt16) {
 	return
 }
 
-// Convert value from string to int8.
+// StringInt8 convert value from string to int8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringInt8(from string, defaultValue ...int8) (nv NullInt8) {
 	pv, err := strconv.ParseInt(from, 0, 8)
@@ -1166,7 +1166,7 @@ func StringInt8(from string, defaultValue ...int8) (nv NullInt8) {
 	return
 }
 
-// Convert value from string to uint.
+// StringUint convert value from string to uint.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringUint(from string, defaultValue ...uint) (nv NullUint) {
 	pv, err := strconv.ParseUint(from, 0, 64)
@@ -1179,7 +1179,7 @@ func StringUint(from string, defaultValue ...uint) (nv NullUint) {
 	return
 }
 
-// Convert value from string to uint64.
+// StringUint64 convert value from string to uint64.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringUint64(from string, defaultValue ...uint64) (nv NullUint64) {
 	pv, err := strconv.ParseUint(from, 0, 64)
@@ -1194,7 +1194,7 @@ func StringUint64(from string, defaultValue ...uint64) (nv NullUint64) {
 	return
 }
 
-// Convert value from string to uint32.
+// StringUint32 convert value from string to uint32.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringUint32(from string, defaultValue ...uint32) (nv NullUint32) {
 	pv, err := strconv.ParseUint(from, 0, 32)
@@ -1207,7 +1207,7 @@ func StringUint32(from string, defaultValue ...uint32) (nv NullUint32) {
 	return
 }
 
-// Convert value from string to uint16.
+// StringUint16 convert value from string to uint16.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringUint16(from string, defaultValue ...uint16) (nv NullUint16) {
 	pv, err := strconv.ParseUint(from, 0, 16)
@@ -1220,7 +1220,7 @@ func StringUint16(from string, defaultValue ...uint16) (nv NullUint16) {
 	return
 }
 
-// Convert value from string to uint8.
+// StringUint8 convert value from string to uint8.
 // Returns value if type can safely converted, otherwise error & default value in result values
 func StringUint8(from string, defaultValue ...uint8) (nv NullUint8) {
 	pv, err := strconv.ParseUint(from, 0, 8)

@@ -57,7 +57,8 @@ func init() {
 	// - to int
 	floatIntConverter := func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		rv := reflect.ValueOf(from)
-		f, i, s := rv.Float(), int64(0), false
+		f, i := rv.Float(), int64(0)
+		var s bool
 		if s = isSafeFloatToInt(f, bitSizeMap[rv.Kind()], bitSizeMap[to.Kind()]); s {
 			i = int64(f)
 		}
@@ -79,7 +80,8 @@ func init() {
 	// - to uint
 	floatUintConverter := func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		rv := reflect.ValueOf(from)
-		f, i, s := rv.Float(), uint64(0), false
+		f, i := rv.Float(), uint64(0)
+		var s bool
 		if s = isSafeFloatToUint(f, bitSizeMap[rv.Kind()], bitSizeMap[to.Kind()]); s {
 			i = uint64(f)
 		}
@@ -101,7 +103,8 @@ func init() {
 	// - to complex
 	floatComplexConverter := func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		rv := reflect.ValueOf(from)
-		f, c, s := rv.Float(), complex128(0), false
+		f, c := rv.Float(), complex128(0)
+		var s bool
 		if s = isSafeFloat(f, bitSizeMap[to.Kind()]); s {
 			c = complex(f, 0)
 		}
@@ -137,14 +140,14 @@ func init() {
 		}
 		return nil, false
 	})
-	// - to SqlValueType
+	// - to SQLValueType
 	matrixSuite.SetConverters(floatReflectTypes, sqlValueReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		rv := reflect.ValueOf(from)
 		switch {
 		case rv.Kind() == reflect.Float32:
-			return SqlValueType{driver.Value(rv.Float()), from}, true
+			return SQLValueType{driver.Value(rv.Float()), from}, true
 		case rv.Kind() == reflect.Float64:
-			return SqlValueType{driver.Value(rv.Float()), from}, true
+			return SQLValueType{driver.Value(rv.Float()), from}, true
 		}
 		return nil, false
 	})

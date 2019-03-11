@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// Convert interface value to bool.
+// Bool convert interface value to bool.
 // Returns true for any non-zero values
 func (t *Type) Bool() (nv NullBool) {
 	if nv.Error = t.err; t.err != nil {
@@ -14,7 +14,7 @@ func (t *Type) Bool() (nv NullBool) {
 	return t.toBool(false)
 }
 
-// Convert interface value to bool.
+// BoolHumanize convert interface value to bool.
 // Returns false for string 'false' in case-insensitive mode or string equals '0', for other types
 // returns true only for positive values
 func (t *Type) BoolHumanize() (nv NullBool) {
@@ -39,7 +39,7 @@ func (t *Type) BoolHumanize() (nv NullBool) {
 	}
 }
 
-// Convert interface value to bool.
+// BoolPositive convert interface value to bool.
 // Returns true only for positive values
 func (t *Type) BoolPositive() (nv NullBool) {
 	if nv.Error = t.err; t.err != nil {
@@ -93,7 +93,7 @@ end:
 	return
 }
 
-// Convert value from string to bool.
+// StringBoolHumanize convert value from string to bool.
 // Returns false for string 'false' in case-insensitive mode or string equals '0'
 func StringBoolHumanize(from string) (nv NullBool) {
 	bf := strings.EqualFold("false", from) || from == "0"

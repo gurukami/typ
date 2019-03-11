@@ -34,43 +34,43 @@ func TestNumericToString(t *testing.T) {
 			[]string{"0", "1.7976931348623157e+308", "NaN", "-Inf", "+Inf"},
 		},
 		{
-			[]interface{}{uint(0),},
+			[]interface{}{uint(0)},
 			[]string{"0"},
 		},
 		{
-			[]interface{}{uint8(0),},
+			[]interface{}{uint8(0)},
 			[]string{"0"},
 		},
 		{
-			[]interface{}{uint16(0),},
+			[]interface{}{uint16(0)},
 			[]string{"0"},
 		},
 		{
-			[]interface{}{uint32(0),},
+			[]interface{}{uint32(0)},
 			[]string{"0"},
 		},
 		{
-			[]interface{}{uint64(0),},
+			[]interface{}{uint64(0)},
 			[]string{"0"},
 		},
 		{
-			[]interface{}{int(0),},
+			[]interface{}{int(0)},
 			[]string{"0"},
 		},
 		{
-			[]interface{}{int8(0),},
+			[]interface{}{int8(0)},
 			[]string{"0"},
 		},
 		{
-			[]interface{}{int16(0),},
+			[]interface{}{int16(0)},
 			[]string{"0"},
 		},
 		{
-			[]interface{}{int32(0),},
+			[]interface{}{int32(0)},
 			[]string{"0"},
 		},
 		{
-			[]interface{}{int64(0),},
+			[]interface{}{int64(0)},
 			[]string{"0"},
 		},
 		{

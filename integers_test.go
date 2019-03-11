@@ -154,7 +154,7 @@ func init() {
 	}
 	matrixSuite.SetConverters(uintReflectTypes, stringReflectTypes, intUintStringConverter)
 	matrixSuite.SetConverters(intReflectTypes, stringReflectTypes, intUintStringConverter)
-	// - to &NullInt*{} 
+	// - to &NullInt*{}
 	matrixSuite.SetConverters(intReflectTypes, nullIntReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		rv := reflect.ValueOf(from)
 		switch {
@@ -176,7 +176,7 @@ func init() {
 		}
 		return nil, false
 	})
-	// - to &NullUint*{} 
+	// - to &NullUint*{}
 	matrixSuite.SetConverters(uintReflectTypes, nullUintReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		rv := reflect.ValueOf(from)
 		switch {
@@ -198,14 +198,14 @@ func init() {
 		}
 		return nil, false
 	})
-	// - to SqlValueType
+	// - to SQLValueType
 	intUintSqValueConverter := func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		rv := reflect.ValueOf(from)
 		switch {
 		case isInt(rv.Kind()):
-			return SqlValueType{driver.Value(int64(rv.Int())), from}, true
+			return SQLValueType{driver.Value(int64(rv.Int())), from}, true
 		case isUint(rv.Kind()):
-			return SqlValueType{driver.Value(int64(rv.Uint())), from}, isSafeUintToInt(rv.Uint(), 64)
+			return SQLValueType{driver.Value(int64(rv.Uint())), from}, isSafeUintToInt(rv.Uint(), 64)
 		}
 		return nil, false
 	}

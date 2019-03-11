@@ -4,7 +4,7 @@ import (
 	"reflect"
 )
 
-// Get value from composite type, argument values used as index keys
+// Get retrieve value from composite type, argument values used as index keys
 func (t *Type) Get(argIndexes ...interface{}) (typ *Type) {
 	if !t.rv.IsValid() {
 		return NewType(nil, ErrInvalidArgument)
