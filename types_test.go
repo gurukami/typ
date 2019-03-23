@@ -535,7 +535,7 @@ func TestEmpty(t *testing.T) {
 }
 
 func testNativeCheckRes(testResults []interface{}, expectedSafe bool, defaultValue interface{}) string {
-	value, _, valid, err := testGetNullIfaceValue(reflect.Indirect(reflect.ValueOf(testResults[0])).Interface())
+	value, _, valid, _, err := testGetNullIfaceValue(reflect.Indirect(reflect.ValueOf(testResults[0])).Interface())
 	deepEqual := reflect.DeepEqual(value, defaultValue)
 	if (expectedSafe && !valid) || (!expectedSafe && !deepEqual && defaultValue != nil) {
 		return errNull{
@@ -595,50 +595,50 @@ type SQLValueType struct {
 	Value    interface{}
 }
 
-func testGetNullIfaceValue(nv interface{}) (value interface{}, nkind reflect.Kind, valid bool, err error) {
+func testGetNullIfaceValue(nv interface{}) (value interface{}, nkind reflect.Kind, valid bool, present bool, err error) {
 	if nv == nil {
-		return nil, reflect.Invalid, false, nil
+		return nil, reflect.Invalid, false, false, nil
 	}
 	nv = reflect.Indirect(reflect.ValueOf(nv)).Interface()
 	switch v := nv.(type) {
 	case NullBool:
-		return v.V(), reflect.Bool, v.Valid(), v.Error
+		return v.V(), reflect.Bool, v.Valid(), v.Present(), v.Error
 	case NullComplex64:
-		return v.V(), reflect.Complex64, v.Valid(), v.Error
+		return v.V(), reflect.Complex64, v.Valid(), v.Present(), v.Error
 	case NullComplex:
-		return v.V(), reflect.Complex128, v.Valid(), v.Error
+		return v.V(), reflect.Complex128, v.Valid(), v.Present(), v.Error
 	case NullInt:
-		return v.V(), reflect.Int, v.Valid(), v.Error
+		return v.V(), reflect.Int, v.Valid(), v.Present(), v.Error
 	case NullInt8:
-		return v.V(), reflect.Int8, v.Valid(), v.Error
+		return v.V(), reflect.Int8, v.Valid(), v.Present(), v.Error
 	case NullInt16:
-		return v.V(), reflect.Int16, v.Valid(), v.Error
+		return v.V(), reflect.Int16, v.Valid(), v.Present(), v.Error
 	case NullInt32:
-		return v.V(), reflect.Int32, v.Valid(), v.Error
+		return v.V(), reflect.Int32, v.Valid(), v.Present(), v.Error
 	case NullInt64:
-		return v.V(), reflect.Int64, v.Valid(), v.Error
+		return v.V(), reflect.Int64, v.Valid(), v.Present(), v.Error
 	case NullUint:
-		return v.V(), reflect.Uint, v.Valid(), v.Error
+		return v.V(), reflect.Uint, v.Valid(), v.Present(), v.Error
 	case NullUint8:
-		return v.V(), reflect.Uint8, v.Valid(), v.Error
+		return v.V(), reflect.Uint8, v.Valid(), v.Present(), v.Error
 	case NullUint16:
-		return v.V(), reflect.Uint16, v.Valid(), v.Error
+		return v.V(), reflect.Uint16, v.Valid(), v.Present(), v.Error
 	case NullUint32:
-		return v.V(), reflect.Uint32, v.Valid(), v.Error
+		return v.V(), reflect.Uint32, v.Valid(), v.Present(), v.Error
 	case NullUint64:
-		return v.V(), reflect.Uint64, v.Valid(), v.Error
+		return v.V(), reflect.Uint64, v.Valid(), v.Present(), v.Error
 	case NullFloat32:
-		return v.V(), reflect.Float32, v.Valid(), v.Error
+		return v.V(), reflect.Float32, v.Valid(), v.Present(), v.Error
 	case NullFloat:
-		return v.V(), reflect.Float64, v.Valid(), v.Error
+		return v.V(), reflect.Float64, v.Valid(), v.Present(), v.Error
 	case NullString:
-		return v.V(), reflect.String, v.Valid(), v.Error
+		return v.V(), reflect.String, v.Valid(), v.Present(), v.Error
 	case NullTime:
-		return v.V(), reflect.Struct, v.Valid(), v.Error
+		return v.V(), reflect.Struct, v.Valid(), v.Present(), v.Error
 	case NullInterface:
-		return v.V(), reflect.ValueOf(v.V()).Kind(), v.Valid(), v.Error
+		return v.V(), reflect.ValueOf(v.V()).Kind(), v.Valid(), v.Present(), v.Error
 	}
-	return nil, reflect.Invalid, false, nil
+	return nil, reflect.Invalid, false, false, nil
 }
 
 func testOfDefault(t *testing.T, v interface{}, methodTypeName string, defaultValue interface{}) {
@@ -651,7 +651,7 @@ func testOfDefault(t *testing.T, v interface{}, methodTypeName string, defaultVa
 		rres = rm.Call([]reflect.Value{})
 	}
 	rd := reflect.ValueOf(defaultValue)
-	actualValue, ar, actualValid, actualError := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
+	actualValue, ar, actualValid, _, actualError := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
 	eValue, eValid, eError := matrixSuite.Test(v, getDefaultType(rd.Kind()))
 	if eValue == nil {
 		return
@@ -674,7 +674,7 @@ func testOfDefaultNil(t *testing.T, methodTypeName string) {
 	rt := reflect.ValueOf(Of(nil))
 	rm := rt.MethodByName(methodTypeName)
 	res := rm.Call([]reflect.Value{})
-	_, _, _, actualError := testGetNullIfaceValue(reflect.Indirect(res[0]).Interface())
+	_, _, _, _, actualError := testGetNullIfaceValue(reflect.Indirect(res[0]).Interface())
 	if _, ok := actualError.(ErrorConvert); !ok {
 		t.Errorf("Of(nil).%s(), must returns 'ErrorConvert' error instead of '%T'", methodTypeName, actualError)
 	}
@@ -691,7 +691,7 @@ func testNative(t *testing.T, fn interface{}, args []interface{}) {
 		defaultValue = rargs[1].Interface()
 	}
 	rres = rf.Call(rargs)
-	actualValue, _, actualValid, actualError := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
+	actualValue, _, actualValid, _, actualError := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
 	eValue, eValid, eError := matrixSuite.Test(rargs[0].Interface(), getDefaultType(rargs[1].Kind()))
 	if eValue == nil {
 		return

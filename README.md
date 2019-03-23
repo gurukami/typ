@@ -134,7 +134,7 @@ fmt.Printf("Value: %v, Valid: %v, Present: %v, Error: %v\n", nv.V(), nv.Valid(),
 | Int* |   +    | +   | `formatting`  | `>= 0`  | `24bit or 53bit`  | `real`, `24bit or 53bit`  |
 | String | `parsing` | `parsing`  | +  | `parsing`  | `parsing`  | `parsing`  |
 | Uint*  | + | `63bit` | `formatting`  | +  | `24bit or 53bit`  |  `24bit or 53bit`  |
-| Float*   |       +        |   `24bit or 53bit`    |  `formatting` | `24bit or 53bit`  |  + | +  |
+| Float*   |       +        |   `24bit or 53bit`    |  `formatting` | `>= 0`, `24bit or 53bit`  |  + | +  |
 | Complex*   |       +        |   `real`, `24bit or 53bit`    | +  | `>= 0`, `real`, `24bit or 53bit`  | `real` | +  |
 
 \* based on bit size capacity, `8,16,32,64` for `Int`,`Uint`; `32,64` for `Float`,`Complex`

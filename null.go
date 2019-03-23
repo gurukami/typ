@@ -33,7 +33,7 @@ func (n NullBool) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullBool) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return n.V(), nil
@@ -130,7 +130,7 @@ func (n NullComplex64) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullComplex64) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	nv := Complex64Float64(n.V())
@@ -237,7 +237,7 @@ func (n NullComplex) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullComplex) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	nv := ComplexFloat64(n.V())
@@ -345,7 +345,7 @@ func (n NullInt) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullInt) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return int64(n.V()), nil
@@ -456,7 +456,7 @@ func (n NullInt8) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullInt8) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return int64(n.V()), nil
@@ -563,7 +563,7 @@ func (n NullInt16) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullInt16) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return int64(n.V()), nil
@@ -670,7 +670,7 @@ func (n NullInt32) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullInt32) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return int64(n.V()), nil
@@ -777,7 +777,7 @@ func (n NullInt64) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullInt64) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return int64(n.V()), nil
@@ -887,7 +887,7 @@ func (n NullUint) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullUint) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	nv := UintInt64(uint64(n.V()))
@@ -998,7 +998,7 @@ func (n NullUint8) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullUint8) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return int64(n.V()), nil
@@ -1105,7 +1105,7 @@ func (n NullUint16) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullUint16) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return int64(n.V()), nil
@@ -1212,7 +1212,7 @@ func (n NullUint32) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullUint32) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return int64(n.V()), nil
@@ -1319,7 +1319,7 @@ func (n NullUint64) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullUint64) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	nv := UintInt64(n.V())
@@ -1430,7 +1430,7 @@ func (n NullFloat32) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullFloat32) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return float64(n.V()), nil
@@ -1536,7 +1536,7 @@ func (n NullFloat) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullFloat) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return n.V(), nil
@@ -1637,7 +1637,7 @@ func (n NullString) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullString) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return n.V(), nil
@@ -1737,7 +1737,7 @@ func (n NullInterface) Value() (driver.Value, error) {
 	if n.Error == nil && !driver.IsValue(n.V()) {
 		return nil, ErrConvert
 	}
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return n.V(), nil
@@ -1829,7 +1829,7 @@ func (n NullTime) Valid() bool {
 
 // Value implements the sql driver Valuer interface.
 func (n NullTime) Value() (driver.Value, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return nil, nil
 	}
 	return n.V(), nil
