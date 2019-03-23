@@ -348,8 +348,8 @@ func testScanSQL(t *testing.T, nv interface{}) {
 		sv := di.value.Interface().(SQLValueType)
 		cnv, valid, _ := matrixSuite.Convert(sv, reflect.TypeOf(nv))
 		aErr := nv.(sql.Scanner).Scan(sv.SQLValue)
-		eValue, _, eValid, _ := testGetNullIfaceValue(cnv)
-		aValue, _, aValid, eErr := testGetNullIfaceValue(nv)
+		eValue, _, eValid, _,  _ := testGetNullIfaceValue(cnv)
+		aValue, _, aValid, _, eErr := testGetNullIfaceValue(nv)
 		if !valid {
 			continue
 		}
@@ -376,7 +376,11 @@ func testValueSQL(t *testing.T, nv interface{}) {
 				t.Errorf("%T{%+[1]v}.Value() must returns 'ErrorConvert' error instead of '%T'", v, actualErr)
 			}
 		} else {
-			if !matrixSuite.Compare(actualValue, sv.SQLValue) && actualErr == nil {
+
+			_, _, _, present, _ := testGetNullIfaceValue(v)
+
+			if present && !matrixSuite.Compare(actualValue, sv.SQLValue) && actualErr == nil {
+
 				t.Errorf("%T{%+[1]v}.Value() failed, expected (expected == actual) %v == %v, error %v",
 					v, sv.SQLValue, actualValue, actualErr,
 				)
@@ -391,7 +395,7 @@ func testTyp(t *testing.T, nv interface{}) {
 		rv := reflect.ValueOf(di.value.Interface())
 		rMethod := rv.MethodByName("Typ")
 		res := rMethod.Call([]reflect.Value{})[0].MethodByName("Kind").Call([]reflect.Value{})
-		_, eType, valid, _ := testGetNullIfaceValue(di.value.Interface())
+		_, eType, valid, _, _ := testGetNullIfaceValue(di.value.Interface())
 		if !valid {
 			eType = reflect.Invalid
 		}
@@ -425,8 +429,8 @@ func testUnmarshalJSON(t *testing.T, nv interface{}) {
 		jt := di.value.Interface().(JSONToken)
 		cnv, valid, _ := matrixSuite.Convert(jt, reflect.TypeOf(nv))
 		aErr := nv.(json.Unmarshaler).UnmarshalJSON(jt.Token)
-		eValue, _, eValid, _ := testGetNullIfaceValue(cnv)
-		aValue, _, aValid, eErr := testGetNullIfaceValue(nv)
+		eValue, _, eValid, _, _ := testGetNullIfaceValue(cnv)
+		aValue, _, aValid, _, eErr := testGetNullIfaceValue(nv)
 		if !valid {
 			continue
 		}
