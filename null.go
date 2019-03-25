@@ -13,6 +13,11 @@ type NullBool struct {
 	Error error
 }
 
+// Set saves value into current struct
+func (n *NullBool) Set(value bool) {
+	n.P = &value
+}
+
 // V returns value of underlying type if it was set, otherwise default value
 func (n NullBool) V() bool {
 	if n.P == nil {
@@ -108,6 +113,11 @@ func NBool(value bool) NullBool {
 type NullComplex64 struct {
 	P     *complex64
 	Error error
+}
+
+// Set saves value into current struct
+func (n *NullComplex64) Set(value complex64) {
+	n.P = &value
 }
 
 // V returns value of underlying type if it was set, otherwise default value
@@ -217,6 +227,11 @@ type NullComplex struct {
 	Error error
 }
 
+// Set saves value into current struct
+func (n *NullComplex) Set(value complex128) {
+	n.P = &value
+}
+
 // V returns value of underlying type if it was set, otherwise default value
 func (n NullComplex) V() complex128 {
 	if n.P == nil {
@@ -323,6 +338,11 @@ func NComplex(value complex128) NullComplex {
 type NullInt struct {
 	P     *int
 	Error error
+}
+
+// Set saves value into current struct
+func (n *NullInt) Set(value int) {
+	n.P = &value
 }
 
 // V returns value of underlying type if it was set, otherwise default value
@@ -436,6 +456,11 @@ type NullInt8 struct {
 	Error error
 }
 
+// Set saves value into current struct
+func (n *NullInt8) Set(value int8) {
+	n.P = &value
+}
+
 // V returns value of underlying type if it was set, otherwise default value
 func (n NullInt8) V() int8 {
 	if n.P == nil {
@@ -541,6 +566,11 @@ func NInt8(value int8) NullInt8 {
 type NullInt16 struct {
 	P     *int16
 	Error error
+}
+
+// Set saves value into current struct
+func (n *NullInt16) Set(value int16) {
+	n.P = &value
 }
 
 // V returns value of underlying type if it was set, otherwise default value
@@ -650,6 +680,11 @@ type NullInt32 struct {
 	Error error
 }
 
+// Set saves value into current struct
+func (n *NullInt32) Set(value int32) {
+	n.P = &value
+}
+
 // V returns value of underlying type if it was set, otherwise default value
 func (n NullInt32) V() int32 {
 	if n.P == nil {
@@ -755,6 +790,11 @@ func NInt32(value int32) NullInt32 {
 type NullInt64 struct {
 	P     *int64
 	Error error
+}
+
+// Set saves value into current struct
+func (n *NullInt64) Set(value int64) {
+	n.P = &value
 }
 
 // V returns value of underlying type if it was set, otherwise default value
@@ -865,6 +905,11 @@ func NInt64(value int64) NullInt64 {
 type NullUint struct {
 	P     *uint
 	Error error
+}
+
+// Set saves value into current struct
+func (n *NullUint) Set(value uint) {
+	n.P = &value
 }
 
 // V returns value of underlying type if it was set, otherwise default value
@@ -978,6 +1023,11 @@ type NullUint8 struct {
 	Error error
 }
 
+// Set saves value into current struct
+func (n *NullUint8) Set(value uint8) {
+	n.P = &value
+}
+
 // V returns value of underlying type if it was set, otherwise default value
 func (n NullUint8) V() uint8 {
 	if n.P == nil {
@@ -1083,6 +1133,11 @@ func NUint8(value uint8) NullUint8 {
 type NullUint16 struct {
 	P     *uint16
 	Error error
+}
+
+// Set saves value into current struct
+func (n *NullUint16) Set(value uint16) {
+	n.P = &value
 }
 
 // V returns value of underlying type if it was set, otherwise default value
@@ -1192,6 +1247,11 @@ type NullUint32 struct {
 	Error error
 }
 
+// Set saves value into current struct
+func (n *NullUint32) Set(value uint32) {
+	n.P = &value
+}
+
 // V returns value of underlying type if it was set, otherwise default value
 func (n NullUint32) V() uint32 {
 	if n.P == nil {
@@ -1297,6 +1357,11 @@ func NUint32(value uint32) NullUint32 {
 type NullUint64 struct {
 	P     *uint64
 	Error error
+}
+
+// Set saves value into current struct
+func (n *NullUint64) Set(value uint64) {
+	n.P = &value
 }
 
 // V returns value of underlying type if it was set, otherwise default value
@@ -1410,6 +1475,11 @@ type NullFloat32 struct {
 	Error error
 }
 
+// Set saves value into current struct
+func (n *NullFloat32) Set(value float32) {
+	n.P = &value
+}
+
 // V returns value of underlying type if it was set, otherwise default value
 func (n NullFloat32) V() float32 {
 	if n.P == nil {
@@ -1516,6 +1586,11 @@ type NullFloat struct {
 	Error error
 }
 
+// Set saves value into current struct
+func (n *NullFloat) Set(value float64) {
+	n.P = &value
+}
+
 // V returns value of underlying type if it was set, otherwise default value
 func (n NullFloat) V() float64 {
 	if n.P == nil {
@@ -1615,6 +1690,11 @@ func NFloat(value float64) NullFloat {
 type NullString struct {
 	P     *string
 	Error error
+}
+
+// Set saves value into current struct
+func (n *NullString) Set(value string) {
+	n.P = &value
 }
 
 // V returns value of underlying type if it was set, otherwise default value
@@ -1717,6 +1797,11 @@ type NullInterface struct {
 	Error error
 }
 
+// Set saves value into current struct
+func (n *NullInterface) Set(value interface{}) {
+	n.P = value
+}
+
 // V returns value of underlying type if it was set, otherwise default value
 func (n NullInterface) V() interface{} {
 	return n.P
@@ -1807,6 +1892,11 @@ func NInterface(value interface{}) NullInterface {
 type NullTime struct {
 	P     *time.Time
 	Error error
+}
+
+// Set saves value into current struct
+func (n *NullTime) Set(value time.Time) {
+	n.P = &value
 }
 
 // V returns value of underlying type if it was set, otherwise default value
