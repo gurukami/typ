@@ -215,11 +215,11 @@ func StringComplex(from string, defaultValue ...complex128) (nv NullComplex) {
 }
 
 func defaultComplex64(nv *NullComplex64, defaultValue ...complex64) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		nv.P = &defaultValue[0]
 		return true
 	}
@@ -227,11 +227,11 @@ func defaultComplex64(nv *NullComplex64, defaultValue ...complex64) bool {
 }
 
 func defaultComplex(nv *NullComplex, defaultValue ...complex128) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		nv.P = &defaultValue[0]
 		return true
 	}

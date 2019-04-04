@@ -9,10 +9,12 @@ import (
 	"testing"
 )
 
-var complexReflectTypes = []reflect.Type{
-	getDefaultType(reflect.Complex64),
-	getDefaultType(reflect.Complex128),
-}
+var (
+	complexReflectTypes = []reflect.Type{
+		getDefaultType(reflect.Complex64),
+		getDefaultType(reflect.Complex128),
+	}
+)
 
 func init() {
 	// Test Data
@@ -186,6 +188,10 @@ func TestComplex(t *testing.T) {
 	for _, di := range testData {
 		testOfDefault(t, di.value.Interface(), "Complex64", dCmplx64)
 		testOfDefault(t, di.value.Interface(), "Complex", dCmplx128)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Complex64", errPassed)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Complex", errPassed)
+		testOfDefaultErr(t, di.value.Interface(), "Complex64", dCmplx64, ErrDefaultValue)
+		testOfDefaultErr(t, di.value.Interface(), "Complex", dCmplx128, ErrDefaultValue)
 		switch di.value.Kind() {
 		case reflect.Int:
 			testNative(t, IntComplex64, []interface{}{di.value.Int(), dCmplx64})
