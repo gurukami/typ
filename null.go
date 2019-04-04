@@ -94,12 +94,12 @@ func (n NullBool) Typ(options ...Option) *Type {
 
 // NullBoolSlice returns slice of bool with filled values from slice of NullBool
 func NullBoolSlice(null []NullBool, valid bool) []bool {
-	slice := make([]bool, len(null))
-	for k, v := range null {
+	slice := make([]bool, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -206,12 +206,12 @@ func (n NullComplex64) Typ(options ...Option) *Type {
 
 // NullComplex64Slice returns slice of complex64 with filled values from slice of NullComplex64
 func NullComplex64Slice(null []NullComplex64, valid bool) []complex64 {
-	slice := make([]complex64, len(null))
-	for k, v := range null {
+	slice := make([]complex64, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -318,13 +318,12 @@ func (n NullComplex) Typ(options ...Option) *Type {
 
 // NullComplexSlice returns slice of complex128 with filled values from slice of NullComplex
 func NullComplexSlice(null []NullComplex, valid bool) []complex128 {
-	slice := make([]complex128, len(null))
-
-	for k, v := range null {
+	slice := make([]complex128, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -434,13 +433,12 @@ func (n NullInt) Typ(options ...Option) *Type {
 
 // NullIntSlice returns slice of int with filled values from slice of NullInt
 func NullIntSlice(null []NullInt, valid bool) []int {
-	slice := make([]int, len(null))
-
-	for k, v := range null {
+	slice := make([]int, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -547,12 +545,12 @@ func (n NullInt8) Typ(options ...Option) *Type {
 
 // NullInt8Slice returns slice of int8 with filled values from slice of NullInt8
 func NullInt8Slice(null []NullInt8, valid bool) []int8 {
-	slice := make([]int8, len(null))
-	for k, v := range null {
+	slice := make([]int8, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -659,12 +657,12 @@ func (n NullInt16) Typ(options ...Option) *Type {
 
 // NullInt16Slice returns slice of int16 with filled values from slice of NullInt16
 func NullInt16Slice(null []NullInt16, valid bool) []int16 {
-	slice := make([]int16, len(null))
-	for k, v := range null {
+	slice := make([]int16, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -771,12 +769,12 @@ func (n NullInt32) Typ(options ...Option) *Type {
 
 // NullInt32Slice returns slice of int32 with filled values from slice of NullInt32
 func NullInt32Slice(null []NullInt32, valid bool) []int32 {
-	slice := make([]int32, len(null))
-	for k, v := range null {
+	slice := make([]int32, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -886,12 +884,12 @@ func (n NullInt64) Typ(options ...Option) *Type {
 
 // NullInt64Slice returns slice of int64 with filled values from slice of NullInt64
 func NullInt64Slice(null []NullInt64, valid bool) []int64 {
-	slice := make([]int64, len(null))
-	for k, v := range null {
+	slice := make([]int64, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -1002,12 +1000,12 @@ func (n NullUint) Typ(options ...Option) *Type {
 
 // NullUintSlice returns slice of uint with filled values from slice of NullUint
 func NullUintSlice(null []NullUint, valid bool) []uint {
-	slice := make([]uint, len(null))
-	for k, v := range null {
+	slice := make([]uint, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -1114,12 +1112,12 @@ func (n NullUint8) Typ(options ...Option) *Type {
 
 // NullUint8Slice returns slice of uint8 with filled values from slice of NullUint8
 func NullUint8Slice(null []NullUint8, valid bool) []uint8 {
-	slice := make([]uint8, len(null))
-	for k, v := range null {
+	slice := make([]uint8, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -1226,12 +1224,12 @@ func (n NullUint16) Typ(options ...Option) *Type {
 
 // NullUint16Slice returns slice of uint16 with filled values from slice of NullUint16
 func NullUint16Slice(null []NullUint16, valid bool) []uint16 {
-	slice := make([]uint16, len(null))
-	for k, v := range null {
+	slice := make([]uint16, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -1338,12 +1336,12 @@ func (n NullUint32) Typ(options ...Option) *Type {
 
 // NullUint32Slice returns slice of uint32 with filled values from slice of NullUint32
 func NullUint32Slice(null []NullUint32, valid bool) []uint32 {
-	slice := make([]uint32, len(null))
-	for k, v := range null {
+	slice := make([]uint32, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -1454,12 +1452,12 @@ func (n NullUint64) Typ(options ...Option) *Type {
 
 // NullUint64Slice returns slice of uint64 with filled values from slice of NullUint64
 func NullUint64Slice(null []NullUint64, valid bool) []uint64 {
-	slice := make([]uint64, len(null))
-	for k, v := range null {
+	slice := make([]uint64, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -1565,12 +1563,12 @@ func (n NullFloat32) Typ(options ...Option) *Type {
 
 // NullFloat32Slice returns slice of float32 with filled values from slice of NullFloat32
 func NullFloat32Slice(null []NullFloat32, valid bool) []float32 {
-	slice := make([]float32, len(null))
-	for k, v := range null {
+	slice := make([]float32, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -1671,12 +1669,12 @@ func (n NullFloat) Typ(options ...Option) *Type {
 
 // NullFloatSlice returns slice of float64 with filled values from slice of NullFloat
 func NullFloatSlice(null []NullFloat, valid bool) []float64 {
-	slice := make([]float64, len(null))
-	for k, v := range null {
+	slice := make([]float64, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -1776,12 +1774,12 @@ func (n NullString) Typ(options ...Option) *Type {
 
 // NullStringSlice returns slice of string with filled values from slice of NullString
 func NullStringSlice(null []NullString, valid bool) []string {
-	slice := make([]string, len(null))
-	for k, v := range null {
+	slice := make([]string, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -1873,12 +1871,12 @@ func (n NullInterface) Typ(options ...Option) *Type {
 
 // NullInterfaceSlice returns slice of interface{} with filled values from slice of NullInterface
 func NullInterfaceSlice(null []NullInterface, valid bool) []interface{} {
-	slice := make([]interface{}, len(null))
-	for k, v := range null {
+	slice := make([]interface{}, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }
@@ -1954,12 +1952,12 @@ func (n NullTime) MarshalJSON() ([]byte, error) {
 
 // NullTimeSlice returns slice of time.Time with filled values from slice of NullTime
 func NullTimeSlice(null []NullTime, valid bool) []time.Time {
-	slice := make([]time.Time, len(null))
-	for k, v := range null {
+	slice := make([]time.Time, 0, len(null))
+	for _, v := range null {
 		if valid && v.Error != nil {
 			continue
 		}
-		slice[k] = v.V()
+		slice = append(slice, v.V())
 	}
 	return slice
 }

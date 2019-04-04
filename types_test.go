@@ -537,12 +537,12 @@ func TestEmpty(t *testing.T) {
 }
 
 func testNativeCheckRes(testResults []interface{}, expectedSafe bool, defaultValue interface{}) string {
-	value, _, valid, _, err := testGetNullIfaceValue(reflect.Indirect(reflect.ValueOf(testResults[0])).Interface())
-	deepEqual := reflect.DeepEqual(value, defaultValue)
-	if (expectedSafe && !valid) || (!expectedSafe && !deepEqual && defaultValue != nil) {
+	from := testGetNullIfaceValue(reflect.Indirect(reflect.ValueOf(testResults[0])).Interface())
+	deepEqual := reflect.DeepEqual(from.value, defaultValue)
+	if (expectedSafe && !from.valid) || (!expectedSafe && !deepEqual && defaultValue != nil) {
 		return errNull{
 			defaultValue, expectedSafe, nil,
-			value, valid, err,
+			from.value, from.valid, from.err,
 		}.String()
 	}
 	return ""
@@ -597,50 +597,58 @@ type SQLValueType struct {
 	Value    interface{}
 }
 
-func testGetNullIfaceValue(nv interface{}) (value interface{}, nkind reflect.Kind, valid bool, present bool, err error) {
+type testNullSuite struct {
+	value   interface{}
+	nkind   reflect.Kind
+	valid   bool
+	present bool
+	err     error
+}
+
+func testGetNullIfaceValue(nv interface{}) testNullSuite {
 	if nv == nil {
-		return nil, reflect.Invalid, false, false, nil
+		return testNullSuite{nkind: reflect.Invalid}
 	}
 	nv = reflect.Indirect(reflect.ValueOf(nv)).Interface()
 	switch v := nv.(type) {
 	case NullBool:
-		return v.V(), reflect.Bool, v.Valid(), v.Present(), v.Error
+		return testNullSuite{v.V(), reflect.Bool, v.Valid(), v.Present(), v.Error}
 	case NullComplex64:
-		return v.V(), reflect.Complex64, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Complex64, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullComplex:
-		return v.V(), reflect.Complex128, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Complex128, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullInt:
-		return v.V(), reflect.Int, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Int, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullInt8:
-		return v.V(), reflect.Int8, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Int8, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullInt16:
-		return v.V(), reflect.Int16, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Int16, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullInt32:
-		return v.V(), reflect.Int32, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Int32, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullInt64:
-		return v.V(), reflect.Int64, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Int64, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullUint:
-		return v.V(), reflect.Uint, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Uint, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullUint8:
-		return v.V(), reflect.Uint8, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Uint8, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullUint16:
-		return v.V(), reflect.Uint16, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Uint16, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullUint32:
-		return v.V(), reflect.Uint32, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Uint32, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullUint64:
-		return v.V(), reflect.Uint64, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Uint64, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullFloat32:
-		return v.V(), reflect.Float32, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Float32, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullFloat:
-		return v.V(), reflect.Float64, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Float64, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullString:
-		return v.V(), reflect.String, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.String, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullTime:
-		return v.V(), reflect.Struct, v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.Struct, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullInterface:
-		return v.V(), reflect.ValueOf(v.V()).Kind(), v.Valid(), v.Present(), v.Error
+		return testNullSuite{value: v.V(), nkind: reflect.ValueOf(v.V()).Kind(), valid: v.Valid(), present: v.Present(), err: v.Error}
 	}
-	return nil, reflect.Invalid, false, false, nil
+	return testNullSuite{nkind: reflect.Invalid}
 }
 
 func testOfDefault(t *testing.T, v interface{}, methodTypeName string, defaultValue interface{}) {
@@ -653,21 +661,21 @@ func testOfDefault(t *testing.T, v interface{}, methodTypeName string, defaultVa
 		rres = rm.Call([]reflect.Value{})
 	}
 	rd := reflect.ValueOf(defaultValue)
-	actualValue, ar, actualValid, _, actualError := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
+	actual := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
 	eValue, eValid, eError := matrixSuite.Test(v, getDefaultType(rd.Kind()))
 	if eValue == nil {
 		return
 	}
-	if v != nil && reflect.TypeOf(v).Kind() == ar {
+	if v != nil && reflect.TypeOf(v).Kind() == actual.nkind {
 		return
 	}
 	if !eValid && defaultValue != nil {
 		eValue = defaultValue
 	}
-	if !matrixSuite.Compare(actualValue, eValue) || actualValid != eValid {
+	if !matrixSuite.Compare(actual.value, eValue) || actual.valid != eValid {
 		t.Errorf("Of(%T(%+[1]v)).%s(%T(%[3]v)), %s", v, methodTypeName, defaultValue, errNull{
 			eValue, eValid, eError,
-			actualValue, actualValid, actualError,
+			actual.value, actual.valid, actual.err,
 		})
 	}
 }
@@ -676,11 +684,11 @@ func testOfDefaultErr(t *testing.T, v interface{}, methodTypeName string, defaul
 	rt := reflect.ValueOf(Of(v))
 	rm := rt.MethodByName(methodTypeName)
 	rres := rm.Call([]reflect.Value{reflect.ValueOf(defaultValue), reflect.ValueOf(defaultValue)})
-	actualValue, _, actualValid, _, actualError := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
-	if actualError != err {
+	actual := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
+	if actual.err != err {
 		t.Errorf("Of(%T(%+[1]v)).%s(), %s", v, methodTypeName, errNull{
 			nil, false, err,
-			actualValue, actualValid, actualError,
+			actual.value, actual.valid, actual.err,
 		})
 	}
 }
@@ -689,11 +697,11 @@ func testOfPassedErr(t *testing.T, v interface{}, methodTypeName string, err err
 	rt := reflect.ValueOf(Of(v))
 	rm := rt.MethodByName(methodTypeName)
 	rres := rm.Call([]reflect.Value{})
-	actualValue, _, actualValid, _, actualError := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
-	if actualError != err {
+	actual := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
+	if actual.err != err {
 		t.Errorf("Of(%T(%+[1]v)).%s(), %s", v, methodTypeName, errNull{
 			nil, false, err,
-			actualValue, actualValid, actualError,
+			actual.value, actual.valid, actual.err,
 		})
 	}
 }
@@ -702,9 +710,9 @@ func testOfDefaultNil(t *testing.T, methodTypeName string) {
 	rt := reflect.ValueOf(Of(nil))
 	rm := rt.MethodByName(methodTypeName)
 	res := rm.Call([]reflect.Value{})
-	_, _, _, _, actualError := testGetNullIfaceValue(reflect.Indirect(res[0]).Interface())
-	if _, ok := actualError.(ErrorConvert); !ok {
-		t.Errorf("Of(nil).%s(), must returns 'ErrorConvert' error instead of '%T'", methodTypeName, actualError)
+	actual := testGetNullIfaceValue(reflect.Indirect(res[0]).Interface())
+	if _, ok := actual.err.(ErrorConvert); !ok {
+		t.Errorf("Of(nil).%s(), must returns 'ErrorConvert' error instead of '%T'", methodTypeName, actual.err)
 	}
 }
 
@@ -719,18 +727,18 @@ func testNative(t *testing.T, fn interface{}, args []interface{}) {
 		defaultValue = rargs[1].Interface()
 	}
 	rres = rf.Call(rargs)
-	actualValue, _, actualValid, _, actualError := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
+	actual := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
 	eValue, eValid, eError := matrixSuite.Test(rargs[0].Interface(), getDefaultType(rargs[1].Kind()))
 	if eValue == nil {
 		return
 	}
-	if !actualValid && defaultValue != nil {
+	if !actual.valid && defaultValue != nil {
 		eValue = defaultValue
 	}
-	if !matrixSuite.Compare(actualValue, eValue) || actualValid != eValid {
+	if !matrixSuite.Compare(actual.value, eValue) || actual.valid != eValid {
 		t.Errorf("%s(%v), %s", rf.String(), args, errNull{
 			eValue, eValid, eError,
-			actualValue, actualValid, actualError,
+			actual.value, actual.valid, actual.err,
 		})
 	}
 }
