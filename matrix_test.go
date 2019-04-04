@@ -235,6 +235,15 @@ func (m *matrix) Compare(a interface{}, b interface{}) bool {
 	return a == b
 }
 
+func (m *matrix) CompareSafe(a interface{}, b interface{}, defCompare bool) (valid bool) {
+	defer func() {
+		if r := recover(); r != nil {
+			valid = defCompare
+		}
+	}()
+	return m.Compare(a, b)
+}
+
 func (m *matrix) ListConverters() []string {
 	var out []string
 	for ci := range m.converters {

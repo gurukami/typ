@@ -253,6 +253,7 @@ func TestNullBool(t *testing.T) {
 	testScanSQL(t, &NullBool{})
 	testValueSQL(t, &NullBool{})
 	testTyp(t, &NullBool{})
+	testSet(t, &NullBool{})
 }
 
 func TestNullComplex(t *testing.T) {
@@ -264,6 +265,7 @@ func TestNullComplex(t *testing.T) {
 		testScanSQL(t, nv)
 		testValueSQL(t, nv)
 		testTyp(t, nv)
+		testSet(t, nv)
 	}
 }
 
@@ -278,6 +280,7 @@ func TestNullInt(t *testing.T) {
 		testScanSQL(t, nv)
 		testValueSQL(t, nv)
 		testTyp(t, nv)
+		testSet(t, nv)
 	}
 }
 
@@ -292,6 +295,7 @@ func TestNullUint(t *testing.T) {
 		testScanSQL(t, nv)
 		testValueSQL(t, nv)
 		testTyp(t, nv)
+		testSet(t, nv)
 	}
 }
 
@@ -304,6 +308,7 @@ func TestNullFloat(t *testing.T) {
 		testScanSQL(t, nv)
 		testValueSQL(t, nv)
 		testTyp(t, nv)
+		testSet(t, nv)
 	}
 }
 
@@ -316,6 +321,7 @@ func TestNullString(t *testing.T) {
 		testScanSQL(t, nv)
 		testValueSQL(t, nv)
 		testTyp(t, nv)
+		testSet(t, nv)
 	}
 }
 
@@ -328,6 +334,7 @@ func TestNullInterface(t *testing.T) {
 		testScanSQL(t, nv)
 		testValueSQL(t, nv)
 		testTyp(t, nv)
+		testSet(t, nv)
 	}
 }
 
@@ -339,6 +346,7 @@ func TestNullTime(t *testing.T) {
 		testUnmarshalJSON(t, nv)
 		testScanSQL(t, nv)
 		testValueSQL(t, nv)
+		testSet(t, nv)
 	}
 }
 
@@ -348,13 +356,13 @@ func testScanSQL(t *testing.T, nv interface{}) {
 		sv := di.value.Interface().(SQLValueType)
 		cnv, valid, _ := matrixSuite.Convert(sv, reflect.TypeOf(nv))
 		aErr := nv.(sql.Scanner).Scan(sv.SQLValue)
-		eValue, _, eValid, _,  _ := testGetNullIfaceValue(cnv)
-		aValue, _, aValid, _, eErr := testGetNullIfaceValue(nv)
+		eValue, _, eValid, _, eErr := testGetNullIfaceValue(cnv)
+		aValue, _, aValid, _, _ := testGetNullIfaceValue(nv)
 		if !valid {
 			continue
 		}
 		if !matrixSuite.Compare(aValue, eValue) || aValid != eValid || aErr != eErr {
-			t.Errorf("%T{}.Scan(%T([%[2]v])) failed, expected Value by reference %s",
+			t.Errorf("%T{}.Scan(%T([%[2]v])) failed, expected value by reference %s",
 				nv, sv.SQLValue,
 				errNull{
 					eValue, eValid, eErr,
@@ -376,9 +384,7 @@ func testValueSQL(t *testing.T, nv interface{}) {
 				t.Errorf("%T{%+[1]v}.Value() must returns 'ErrorConvert' error instead of '%T'", v, actualErr)
 			}
 		} else {
-
 			_, _, _, present, _ := testGetNullIfaceValue(v)
-
 			if present && !matrixSuite.Compare(actualValue, sv.SQLValue) && actualErr == nil {
 
 				t.Errorf("%T{%+[1]v}.Value() failed, expected (expected == actual) %v == %v, error %v",
@@ -401,6 +407,29 @@ func testTyp(t *testing.T, nv interface{}) {
 		}
 		if res[0].Interface().(reflect.Kind) != eType {
 			t.Errorf("%T{%+[1]v}.Typ().Kind() failed, expected (expected == actual) %s == %s", di.value.Interface(), eType, res[0].Interface())
+		}
+	}
+}
+
+func testSet(t *testing.T, nv interface{}) {
+	testData := matrixSuite.GenerateToTyp(matrixSuite.Generate(), reflect.TypeOf(nv))
+	for _, di := range testData {
+		rd := reflect.ValueOf(nv)
+		sValue, _, _, _, _ := testGetNullIfaceValue(reflect.ValueOf(di.value.Interface()).Interface())
+		rv := reflect.ValueOf(sValue)
+		_, ok := sValue.(NullInterface)
+		if sValue == nil || ok || rv.Kind() == reflect.Func {
+			continue
+		}
+		rd.MethodByName("Set").Call([]reflect.Value{rv})
+		aValue, _, aValid, _, aErr := testGetNullIfaceValue(rd.Interface())
+		if !matrixSuite.CompareSafe(aValue, sValue, true) {
+			t.Errorf("%T{}.Set(%T([%[2]v])) failed, expected value from V() %s",
+				nv, sValue,
+				errNull{
+					sValue, false, nil,
+					aValue, aValid, aErr,
+				})
 		}
 	}
 }
@@ -429,13 +458,13 @@ func testUnmarshalJSON(t *testing.T, nv interface{}) {
 		jt := di.value.Interface().(JSONToken)
 		cnv, valid, _ := matrixSuite.Convert(jt, reflect.TypeOf(nv))
 		aErr := nv.(json.Unmarshaler).UnmarshalJSON(jt.Token)
-		eValue, _, eValid, _, _ := testGetNullIfaceValue(cnv)
-		aValue, _, aValid, _, eErr := testGetNullIfaceValue(nv)
+		eValue, _, eValid, _, eErr := testGetNullIfaceValue(cnv)
+		aValue, _, aValid, _, _ := testGetNullIfaceValue(nv)
 		if !valid {
 			continue
 		}
 		if !matrixSuite.Compare(aValue, eValue) || aValid != eValid || aErr != eErr {
-			t.Errorf("%T{}.UnmarshalJSON([]byte(%s)) failed, expected Value by reference %s",
+			t.Errorf("%T{}.UnmarshalJSON([]byte(%s)) failed, expected value by reference %s",
 				nv, jt.Token,
 				errNull{
 					eValue, eValid, eErr,
