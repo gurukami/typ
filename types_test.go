@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"database/sql/driver"
 	"encoding/json"
+	"errors"
 	"math"
 	"reflect"
 	"testing"
@@ -20,6 +21,7 @@ type JSONToken struct {
 var (
 	jsonTokenReflectType  = reflect.TypeOf(JSONToken{})
 	jsonTokenReflectTypes = []reflect.Type{jsonTokenReflectType}
+	errPassed             = errors.New("passed error")
 )
 
 func init() {
@@ -665,6 +667,32 @@ func testOfDefault(t *testing.T, v interface{}, methodTypeName string, defaultVa
 	if !matrixSuite.Compare(actualValue, eValue) || actualValid != eValid {
 		t.Errorf("Of(%T(%+[1]v)).%s(%T(%[3]v)), %s", v, methodTypeName, defaultValue, errNull{
 			eValue, eValid, eError,
+			actualValue, actualValid, actualError,
+		})
+	}
+}
+
+func testOfDefaultErr(t *testing.T, v interface{}, methodTypeName string, defaultValue interface{}, err error) {
+	rt := reflect.ValueOf(Of(v))
+	rm := rt.MethodByName(methodTypeName)
+	rres := rm.Call([]reflect.Value{reflect.ValueOf(defaultValue), reflect.ValueOf(defaultValue)})
+	actualValue, _, actualValid, _, actualError := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
+	if actualError != err {
+		t.Errorf("Of(%T(%+[1]v)).%s(), %s", v, methodTypeName, errNull{
+			nil, false, err,
+			actualValue, actualValid, actualError,
+		})
+	}
+}
+
+func testOfPassedErr(t *testing.T, v interface{}, methodTypeName string, err error) {
+	rt := reflect.ValueOf(Of(v))
+	rm := rt.MethodByName(methodTypeName)
+	rres := rm.Call([]reflect.Value{})
+	actualValue, _, actualValid, _, actualError := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
+	if actualError != err {
+		t.Errorf("Of(%T(%+[1]v)).%s(), %s", v, methodTypeName, errNull{
+			nil, false, err,
 			actualValue, actualValid, actualError,
 		})
 	}

@@ -268,6 +268,16 @@ func TestInt(t *testing.T) {
 		testOfDefault(t, di.value.Interface(), "Int16", dInt16)
 		testOfDefault(t, di.value.Interface(), "Int32", dInt32)
 		testOfDefault(t, di.value.Interface(), "Int64", dInt64)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Int", errPassed)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Int8", errPassed)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Int16", errPassed)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Int32", errPassed)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Int64", errPassed)
+		testOfDefaultErr(t, di.value.Interface(), "Int", dInt, ErrDefaultValue)
+		testOfDefaultErr(t, di.value.Interface(), "Int8", dInt8, ErrDefaultValue)
+		testOfDefaultErr(t, di.value.Interface(), "Int16", dInt16, ErrDefaultValue)
+		testOfDefaultErr(t, di.value.Interface(), "Int32", dInt32, ErrDefaultValue)
+		testOfDefaultErr(t, di.value.Interface(), "Int64", dInt64, ErrDefaultValue)
 		switch di.value.Kind() {
 		case reflect.Int64:
 			testNative(t, Int8, []interface{}{di.value.Int(), dInt8})
@@ -330,6 +340,16 @@ func TestUint(t *testing.T) {
 		testOfDefault(t, di.value.Interface(), "Uint16", dUint16)
 		testOfDefault(t, di.value.Interface(), "Uint32", dUint32)
 		testOfDefault(t, di.value.Interface(), "Uint64", dUint64)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Uint", errPassed)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Uint8", errPassed)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Uint16", errPassed)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Uint32", errPassed)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Uint64", errPassed)
+		testOfDefaultErr(t, di.value.Interface(), "Uint", dUint, ErrDefaultValue)
+		testOfDefaultErr(t, di.value.Interface(), "Uint8", dUint8, ErrDefaultValue)
+		testOfDefaultErr(t, di.value.Interface(), "Uint16", dUint16, ErrDefaultValue)
+		testOfDefaultErr(t, di.value.Interface(), "Uint32", dUint32, ErrDefaultValue)
+		testOfDefaultErr(t, di.value.Interface(), "Uint64", dUint64, ErrDefaultValue)
 		switch di.value.Kind() {
 		case reflect.Int64:
 			testNative(t, IntUint8, []interface{}{di.value.Int(), dUint8})

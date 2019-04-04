@@ -248,11 +248,11 @@ func StringFloat(from string, defaultValue ...float64) (nv NullFloat) {
 }
 
 func defaultFloat32(nv *NullFloat32, defaultValue ...float32) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		v := defaultValue[0]
 		nv.P = &v
 		return true
@@ -261,11 +261,11 @@ func defaultFloat32(nv *NullFloat32, defaultValue ...float32) bool {
 }
 
 func defaultFloat(nv *NullFloat, defaultValue ...float64) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		v := defaultValue[0]
 		nv.P = &v
 		return true

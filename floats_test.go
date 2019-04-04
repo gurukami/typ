@@ -185,6 +185,10 @@ func TestFloat(t *testing.T) {
 	for _, di := range testData {
 		testOfDefault(t, di.value.Interface(), "Float32", dFloat32)
 		testOfDefault(t, di.value.Interface(), "Float", dFloat64)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Float32", errPassed)
+		testOfPassedErr(t, NewType(di.value.Interface(), errPassed), "Float", errPassed)
+		testOfDefaultErr(t, di.value.Interface(), "Float32", dFloat32, ErrDefaultValue)
+		testOfDefaultErr(t, di.value.Interface(), "Float", dFloat64, ErrDefaultValue)
 		switch di.value.Kind() {
 		case reflect.Int:
 			testNative(t, IntFloat32, []interface{}{di.value.Int(), dFloat32})

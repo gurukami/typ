@@ -10,9 +10,11 @@ import (
 type BoolPositive bool
 type BoolHumanize bool
 
-var boolReflectTypes = []reflect.Type{
-	getDefaultType(reflect.Bool),
-}
+var (
+	boolReflectTypes = []reflect.Type{
+		getDefaultType(reflect.Bool),
+	}
+)
 
 func init() {
 	// Test Data
@@ -125,6 +127,13 @@ func TestBool(t *testing.T) {
 				expectedValue, expectedValid, nil,
 				nv.V(), nv.Valid(), nv.Error,
 			})
+		} // with error
+		nv = NewType(v.value.Interface(), errPassed).Bool()
+		if nv.Error != errPassed || nv.Valid() {
+			t.Errorf("Of(%T(%+[1]v)).BoolPositive(), %s", v.value.Interface(), errNull{
+				nil, false, errPassed,
+				nv.V(), nv.Valid(), nv.Error,
+			})
 		}
 	}
 }
@@ -140,6 +149,14 @@ func TestBoolPositive(t *testing.T) {
 		if !matrixSuite.Compare(nv.V(), expectedValue) || nv.Valid() != expectedValid {
 			t.Errorf("Of(%T(%+[1]v)).BoolPositive(), %s", v.value.Interface(), errNull{
 				expectedValue, expectedValid, nil,
+				nv.V(), nv.Valid(), nv.Error,
+			})
+		}
+		// with error
+		nv = NewType(v.value.Interface(), errPassed).BoolPositive()
+		if nv.Error != errPassed || nv.Valid() {
+			t.Errorf("Of(%T(%+[1]v)).BoolPositive(), %s", v.value.Interface(), errNull{
+				nil, false, errPassed,
 				nv.V(), nv.Valid(), nv.Error,
 			})
 		}
@@ -168,6 +185,14 @@ func TestBoolHumanize(t *testing.T) {
 					nv.V(), nv.Valid(), nv.Error,
 				})
 			}
+		}
+		// with error
+		nv = NewType(di.value.Interface(), errPassed).BoolHumanize()
+		if nv.Error != errPassed || nv.Valid() {
+			t.Errorf("Of(%T(%+[1]v)).BoolPositive(), %s", di.value.Interface(), errNull{
+				nil, false, errPassed,
+				nv.V(), nv.Valid(), nv.Error,
+			})
 		}
 	}
 }

@@ -168,9 +168,6 @@ func (t *Type) Uint64(defaultValue ...uint64) (nv NullUint64) {
 // Convert interface value to any signed integer type.
 // Returns error if type can't safely converted
 func (t *Type) toInt(typeTo reflect.Kind) (nv NullInt64) {
-	if nv.Error = t.err; t.err != nil {
-		return
-	}
 	if !t.rv.IsValid() || !isInt(typeTo) {
 		nv.Error = ErrConvert
 		return
@@ -231,9 +228,6 @@ func (t *Type) toInt(typeTo reflect.Kind) (nv NullInt64) {
 // Convert interface value to any unsigned integer type.
 // Returns error if type can't safely converted
 func (t *Type) toUint(typeTo reflect.Kind) (nv NullUint64) {
-	if nv.Error = t.err; t.err != nil {
-		return
-	}
 	if !t.rv.IsValid() || !isUint(typeTo) {
 		nv.Error = ErrConvert
 		return
@@ -1234,11 +1228,11 @@ func StringUint8(from string, defaultValue ...uint8) (nv NullUint8) {
 }
 
 func defaultInt8(nv *NullInt8, defaultValue ...int8) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		v := defaultValue[0]
 		nv.P = &v
 		return true
@@ -1247,11 +1241,11 @@ func defaultInt8(nv *NullInt8, defaultValue ...int8) bool {
 }
 
 func defaultInt16(nv *NullInt16, defaultValue ...int16) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		v := defaultValue[0]
 		nv.P = &v
 		return true
@@ -1260,11 +1254,11 @@ func defaultInt16(nv *NullInt16, defaultValue ...int16) bool {
 }
 
 func defaultInt32(nv *NullInt32, defaultValue ...int32) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		v := defaultValue[0]
 		nv.P = &v
 		return true
@@ -1273,11 +1267,11 @@ func defaultInt32(nv *NullInt32, defaultValue ...int32) bool {
 }
 
 func defaultInt64(nv *NullInt64, defaultValue ...int64) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		v := defaultValue[0]
 		nv.P = &v
 		return true
@@ -1286,11 +1280,11 @@ func defaultInt64(nv *NullInt64, defaultValue ...int64) bool {
 }
 
 func defaultInt(nv *NullInt, defaultValue ...int) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		v := defaultValue[0]
 		nv.P = &v
 		return true
@@ -1299,11 +1293,11 @@ func defaultInt(nv *NullInt, defaultValue ...int) bool {
 }
 
 func defaultUint8(nv *NullUint8, defaultValue ...uint8) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		v := defaultValue[0]
 		nv.P = &v
 		return true
@@ -1312,11 +1306,11 @@ func defaultUint8(nv *NullUint8, defaultValue ...uint8) bool {
 }
 
 func defaultUint16(nv *NullUint16, defaultValue ...uint16) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		v := defaultValue[0]
 		nv.P = &v
 		return true
@@ -1325,11 +1319,11 @@ func defaultUint16(nv *NullUint16, defaultValue ...uint16) bool {
 }
 
 func defaultUint32(nv *NullUint32, defaultValue ...uint32) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		v := defaultValue[0]
 		nv.P = &v
 		return true
@@ -1338,11 +1332,11 @@ func defaultUint32(nv *NullUint32, defaultValue ...uint32) bool {
 }
 
 func defaultUint64(nv *NullUint64, defaultValue ...uint64) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		v := defaultValue[0]
 		nv.P = &v
 		return true
@@ -1351,11 +1345,11 @@ func defaultUint64(nv *NullUint64, defaultValue ...uint64) bool {
 }
 
 func defaultUint(nv *NullUint, defaultValue ...uint) bool {
+	if len(defaultValue) > 1 {
+		nv.Error = ErrDefaultValue
+		return true
+	}
 	if !nv.Valid() && len(defaultValue) > 0 {
-		if len(defaultValue) > 1 {
-			nv.Error = ErrDefaultValue
-			return true
-		}
 		v := defaultValue[0]
 		nv.P = &v
 		return true
