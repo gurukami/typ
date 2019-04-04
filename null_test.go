@@ -254,6 +254,23 @@ func TestNullBool(t *testing.T) {
 	testValueSQL(t, &NullBool{})
 	testTyp(t, &NullBool{})
 	testSet(t, &NullBool{})
+	testNType(t, &NullBool{}, NBool)
+}
+
+func TestNullBoolSlice(t *testing.T) {
+	ns := []NullBool{
+		NBool(true),
+		NBool(false),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullBoolSlice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullBoolSlice(%v, false), slice length not equal", ns)
+	}
+	sl = NullBoolSlice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullBoolSlice(%v, true), slice length not equal", ns)
+	}
 }
 
 func TestNullComplex(t *testing.T) {
@@ -266,6 +283,40 @@ func TestNullComplex(t *testing.T) {
 		testValueSQL(t, nv)
 		testTyp(t, nv)
 		testSet(t, nv)
+	}
+	testNType(t, &NullComplex64{}, NComplex64)
+	testNType(t, &NullComplex{}, NComplex)
+}
+
+func TestNullComplexSlice(t *testing.T) {
+	ns := []NullComplex{
+		NComplex(0),
+		NComplex(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullComplexSlice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullComplexSlice(%v, false), slice length not equal", ns)
+	}
+	sl = NullComplexSlice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullComplexSlice(%v, true), slice length not equal", ns)
+	}
+}
+
+func TestNullComplex64Slice(t *testing.T) {
+	ns := []NullComplex64{
+		NComplex64(0),
+		NComplex64(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullComplex64Slice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullComplex64Slice(%v, false), slice length not equal", ns)
+	}
+	sl = NullComplex64Slice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullComplex64Slice(%v, true), slice length not equal", ns)
 	}
 }
 
@@ -282,6 +333,91 @@ func TestNullInt(t *testing.T) {
 		testTyp(t, nv)
 		testSet(t, nv)
 	}
+	testNType(t, &NullInt{}, NInt)
+	testNType(t, &NullInt64{}, NInt64)
+	testNType(t, &NullInt32{}, NInt32)
+	testNType(t, &NullInt16{}, NInt16)
+	testNType(t, &NullInt8{}, NInt8)
+}
+
+func TestNullIntSlice(t *testing.T) {
+	ns := []NullInt{
+		NInt(0),
+		NInt(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullIntSlice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullComplexSlice(%v, false), slice length not equal", ns)
+	}
+	sl = NullIntSlice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullComplexSlice(%v, true), slice length not equal", ns)
+	}
+}
+
+func TestNullInt64Slice(t *testing.T) {
+	ns := []NullInt64{
+		NInt64(0),
+		NInt64(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullInt64Slice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullInt64Slice(%v, false), slice length not equal", ns)
+	}
+	sl = NullInt64Slice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullInt64Slice(%v, true), slice length not equal", ns)
+	}
+}
+
+func TestNullInt32Slice(t *testing.T) {
+	ns := []NullInt32{
+		NInt32(0),
+		NInt32(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullInt32Slice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullInt32Slice(%v, false), slice length not equal", ns)
+	}
+	sl = NullInt32Slice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullInt32Slice(%v, true), slice length not equal", ns)
+	}
+}
+
+func TestNullInt16Slice(t *testing.T) {
+	ns := []NullInt16{
+		NInt16(0),
+		NInt16(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullInt16Slice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullInt16Slice(%v, false), slice length not equal", ns)
+	}
+	sl = NullInt16Slice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullInt16Slice(%v, true), slice length not equal", ns)
+	}
+}
+
+func TestNullInt8Slice(t *testing.T) {
+	ns := []NullInt8{
+		NInt8(0),
+		NInt8(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullInt8Slice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullInt8Slice(%v, false), slice length not equal", ns)
+	}
+	sl = NullInt8Slice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullInt8Slice(%v, true), slice length not equal", ns)
+	}
 }
 
 func TestNullUint(t *testing.T) {
@@ -297,6 +433,91 @@ func TestNullUint(t *testing.T) {
 		testTyp(t, nv)
 		testSet(t, nv)
 	}
+	testNType(t, &NullUint{}, NUint)
+	testNType(t, &NullUint64{}, NUint64)
+	testNType(t, &NullUint32{}, NUint32)
+	testNType(t, &NullUint16{}, NUint16)
+	testNType(t, &NullUint8{}, NUint8)
+}
+
+func TestNullUintSlice(t *testing.T) {
+	ns := []NullUint{
+		NUint(0),
+		NUint(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullUintSlice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullComplexSlice(%v, false), slice length not equal", ns)
+	}
+	sl = NullUintSlice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullComplexSlice(%v, true), slice length not equal", ns)
+	}
+}
+
+func TestNullUint64Slice(t *testing.T) {
+	ns := []NullUint64{
+		NUint64(0),
+		NUint64(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullUint64Slice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullUint64Slice(%v, false), slice length not equal", ns)
+	}
+	sl = NullUint64Slice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullUint64Slice(%v, true), slice length not equal", ns)
+	}
+}
+
+func TestNullUint32Slice(t *testing.T) {
+	ns := []NullUint32{
+		NUint32(0),
+		NUint32(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullUint32Slice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullUint32Slice(%v, false), slice length not equal", ns)
+	}
+	sl = NullUint32Slice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullUint32Slice(%v, true), slice length not equal", ns)
+	}
+}
+
+func TestNullUint16Slice(t *testing.T) {
+	ns := []NullUint16{
+		NUint16(0),
+		NUint16(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullUint16Slice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullUint16Slice(%v, false), slice length not equal", ns)
+	}
+	sl = NullUint16Slice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullUint16Slice(%v, true), slice length not equal", ns)
+	}
+}
+
+func TestNullUint8Slice(t *testing.T) {
+	ns := []NullUint8{
+		NUint8(0),
+		NUint8(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullUint8Slice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullUint8Slice(%v, false), slice length not equal", ns)
+	}
+	sl = NullUint8Slice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullUint8Slice(%v, true), slice length not equal", ns)
+	}
 }
 
 func TestNullFloat(t *testing.T) {
@@ -310,6 +531,40 @@ func TestNullFloat(t *testing.T) {
 		testTyp(t, nv)
 		testSet(t, nv)
 	}
+	testNType(t, &NullFloat32{}, NFloat32)
+	testNType(t, &NullFloat{}, NFloat)
+}
+
+func TestNullFloatSlice(t *testing.T) {
+	ns := []NullFloat{
+		NFloat(0),
+		NFloat(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullFloatSlice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullFloatSlice(%v, false), slice length not equal", ns)
+	}
+	sl = NullFloatSlice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullFloatSlice(%v, true), slice length not equal", ns)
+	}
+}
+
+func TestNullFloat32Slice(t *testing.T) {
+	ns := []NullFloat32{
+		NFloat32(0),
+		NFloat32(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullFloat32Slice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullFloat32Slice(%v, false), slice length not equal", ns)
+	}
+	sl = NullFloat32Slice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullFloat32Slice(%v, true), slice length not equal", ns)
+	}
 }
 
 func TestNullString(t *testing.T) {
@@ -322,6 +577,23 @@ func TestNullString(t *testing.T) {
 		testValueSQL(t, nv)
 		testTyp(t, nv)
 		testSet(t, nv)
+		testNType(t, nv, NString)
+	}
+}
+
+func TestNullStringSlice(t *testing.T) {
+	ns := []NullString{
+		NString("t"),
+		NString("f"),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullStringSlice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullStringSlice(%v, false), slice length not equal", ns)
+	}
+	sl = NullStringSlice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullStringSlice(%v, true), slice length not equal", ns)
 	}
 }
 
@@ -335,6 +607,23 @@ func TestNullInterface(t *testing.T) {
 		testValueSQL(t, nv)
 		testTyp(t, nv)
 		testSet(t, nv)
+		testNType(t, nv, NInterface)
+	}
+}
+
+func TestNullInterfaceSlice(t *testing.T) {
+	ns := []NullInterface{
+		NInterface(0),
+		NInterface(1),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullInterfaceSlice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullInterfaceSlice(%v, false), slice length not equal", ns)
+	}
+	sl = NullInterfaceSlice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullInterfaceSlice(%v, true), slice length not equal", ns)
 	}
 }
 
@@ -347,6 +636,23 @@ func TestNullTime(t *testing.T) {
 		testScanSQL(t, nv)
 		testValueSQL(t, nv)
 		testSet(t, nv)
+		testNType(t, nv, NTime)
+	}
+}
+
+func TestNullTimeSlice(t *testing.T) {
+	ns := []NullTime{
+		NTime(time.Now()),
+		NTime(time.Now()),
+		{Error: ErrDefaultValue},
+	}
+	sl := NullTimeSlice(ns, false)
+	if len(sl) != len(ns) || cap(sl) != cap(ns) {
+		t.Errorf("NullTimeSlice(%v, false), slice length not equal", ns)
+	}
+	sl = NullTimeSlice(ns, true)
+	if len(sl) != len(ns)-1 || cap(sl) != cap(ns) {
+		t.Errorf("NullTimeSlice(%v, true), slice length not equal", ns)
 	}
 }
 
@@ -356,17 +662,17 @@ func testScanSQL(t *testing.T, nv interface{}) {
 		sv := di.value.Interface().(SQLValueType)
 		cnv, valid, _ := matrixSuite.Convert(sv, reflect.TypeOf(nv))
 		aErr := nv.(sql.Scanner).Scan(sv.SQLValue)
-		eValue, _, eValid, _, eErr := testGetNullIfaceValue(cnv)
-		aValue, _, aValid, _, _ := testGetNullIfaceValue(nv)
+		expected := testGetNullIfaceValue(cnv)
+		actual := testGetNullIfaceValue(nv)
 		if !valid {
 			continue
 		}
-		if !matrixSuite.Compare(aValue, eValue) || aValid != eValid || aErr != eErr {
+		if !matrixSuite.Compare(actual.value, expected.value) || actual.valid != expected.valid || actual.err != expected.err {
 			t.Errorf("%T{}.Scan(%T([%[2]v])) failed, expected value by reference %s",
 				nv, sv.SQLValue,
 				errNull{
-					eValue, eValid, eErr,
-					aValue, aValid, aErr,
+					expected.value, expected.valid, expected.err,
+					actual.value, actual.valid, aErr,
 				})
 		}
 	}
@@ -384,9 +690,8 @@ func testValueSQL(t *testing.T, nv interface{}) {
 				t.Errorf("%T{%+[1]v}.Value() must returns 'ErrorConvert' error instead of '%T'", v, actualErr)
 			}
 		} else {
-			_, _, _, present, _ := testGetNullIfaceValue(v)
-			if present && !matrixSuite.Compare(actualValue, sv.SQLValue) && actualErr == nil {
-
+			from := testGetNullIfaceValue(v)
+			if from.present && !matrixSuite.Compare(actualValue, sv.SQLValue) && actualErr == nil {
 				t.Errorf("%T{%+[1]v}.Value() failed, expected (expected == actual) %v == %v, error %v",
 					v, sv.SQLValue, actualValue, actualErr,
 				)
@@ -401,12 +706,23 @@ func testTyp(t *testing.T, nv interface{}) {
 		rv := reflect.ValueOf(di.value.Interface())
 		rMethod := rv.MethodByName("Typ")
 		res := rMethod.Call([]reflect.Value{})[0].MethodByName("Kind").Call([]reflect.Value{})
-		_, eType, valid, _, _ := testGetNullIfaceValue(di.value.Interface())
-		if !valid {
-			eType = reflect.Invalid
+		expected := testGetNullIfaceValue(di.value.Interface())
+		if !expected.valid {
+			expected.nkind = reflect.Invalid
 		}
-		if res[0].Interface().(reflect.Kind) != eType {
-			t.Errorf("%T{%+[1]v}.Typ().Kind() failed, expected (expected == actual) %s == %s", di.value.Interface(), eType, res[0].Interface())
+		if res[0].Interface().(reflect.Kind) != expected.nkind {
+			t.Errorf("%T{%+[1]v}.Typ().Kind() failed, expected (expected == actual) %s == %s", di.value.Interface(), expected.nkind, res[0].Interface())
+		}
+		// typ error
+		fl := rv.Elem().FieldByName("Error")
+		fl.Set(reflect.ValueOf(errPassed))
+		res = rMethod.Call([]reflect.Value{})[0].MethodByName("Kind").Call([]reflect.Value{})
+		if res[0].Interface().(reflect.Kind) != reflect.Invalid {
+			t.Errorf("%T{%+[1]v}.Typ().Kind() failed, expected (expected == actual) %s == %s", di.value.Interface(), expected.nkind, res[0].Interface())
+		}
+		res = rMethod.Call([]reflect.Value{})[0].MethodByName("Error").Call([]reflect.Value{})
+		if res[0].Interface().(error) != errPassed {
+			t.Errorf("%T{%+[1]v}.Typ().Error() failed, expected (expected == actual) %v == %v", di.value.Interface(), errPassed, res[0].Interface())
 		}
 	}
 }
@@ -415,20 +731,20 @@ func testSet(t *testing.T, nv interface{}) {
 	testData := matrixSuite.GenerateToTyp(matrixSuite.Generate(), reflect.TypeOf(nv))
 	for _, di := range testData {
 		rd := reflect.ValueOf(nv)
-		sValue, _, _, _, _ := testGetNullIfaceValue(reflect.ValueOf(di.value.Interface()).Interface())
-		rv := reflect.ValueOf(sValue)
-		_, ok := sValue.(NullInterface)
-		if sValue == nil || ok || rv.Kind() == reflect.Func {
+		from := testGetNullIfaceValue(reflect.ValueOf(di.value.Interface()).Interface())
+		rv := reflect.ValueOf(from.value)
+		_, ok := from.value.(NullInterface)
+		if from.value == nil || ok || rv.Kind() == reflect.Func {
 			continue
 		}
 		rd.MethodByName("Set").Call([]reflect.Value{rv})
-		aValue, _, aValid, _, aErr := testGetNullIfaceValue(rd.Interface())
-		if !matrixSuite.CompareSafe(aValue, sValue, true) {
+		actual := testGetNullIfaceValue(rd.Interface())
+		if !matrixSuite.CompareSafe(actual.value, from.value, true) {
 			t.Errorf("%T{}.Set(%T([%[2]v])) failed, expected value from V() %s",
-				nv, sValue,
+				nv, from.value,
 				errNull{
-					sValue, false, nil,
-					aValue, aValid, aErr,
+					from.value, false, nil,
+					actual.value, actual.valid, actual.err,
 				})
 		}
 	}
@@ -458,23 +774,43 @@ func testUnmarshalJSON(t *testing.T, nv interface{}) {
 		jt := di.value.Interface().(JSONToken)
 		cnv, valid, _ := matrixSuite.Convert(jt, reflect.TypeOf(nv))
 		aErr := nv.(json.Unmarshaler).UnmarshalJSON(jt.Token)
-		eValue, _, eValid, _, eErr := testGetNullIfaceValue(cnv)
-		aValue, _, aValid, _, _ := testGetNullIfaceValue(nv)
+		expected := testGetNullIfaceValue(cnv)
+		actual := testGetNullIfaceValue(nv)
 		if !valid {
 			continue
 		}
-		if !matrixSuite.Compare(aValue, eValue) || aValid != eValid || aErr != eErr {
+		if !matrixSuite.Compare(actual.value, expected.value) || actual.valid != expected.valid || aErr != expected.err {
 			t.Errorf("%T{}.UnmarshalJSON([]byte(%s)) failed, expected value by reference %s",
 				nv, jt.Token,
 				errNull{
-					eValue, eValid, eErr,
-					aValue, aValid, aErr,
+					expected.value, expected.valid, expected.err,
+					actual.value, actual.valid, aErr,
+				})
+		}
+	}
+}
+
+func testNType(t *testing.T, nv interface{}, fn interface{}) {
+	rf := reflect.ValueOf(fn)
+	testData := matrixSuite.GenerateToTyp(matrixSuite.Generate(), reflect.TypeOf(nv))
+	for _, di := range testData {
+		from := testGetNullIfaceValue(reflect.ValueOf(di.value.Interface()).Interface())
+		_, ok := from.value.(NullInterface)
+		if from.value == nil || ok || from.nkind == reflect.Func {
+			continue
+		}
+		res := rf.Call([]reflect.Value{reflect.ValueOf(from.value)})
+		expected := testGetNullIfaceValue(nv)
+		actual := testGetNullIfaceValue(res[0].Interface())
+		if !matrixSuite.CompareSafe(actual.value, from.value, true) {
+			t.Errorf("%s(%v), %s",
+				rf.String(), from.value,
+				errNull{
+					expected.value, expected.valid, expected.err,
+					actual.value, actual.valid, actual.err,
 				})
 		}
 	}
 }
 
 // TODO: Benchmark
-// TODO: Test N*
-// TODO: Test Null*Slice
-// TODO: Test Present
