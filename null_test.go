@@ -721,7 +721,7 @@ func testTyp(t *testing.T, nv interface{}) {
 			t.Errorf("%T{%+[1]v}.Typ().Kind() failed, expected (expected == actual) %s == %s", di.value.Interface(), expected.nkind, res[0].Interface())
 		}
 		res = rMethod.Call([]reflect.Value{})[0].MethodByName("Error").Call([]reflect.Value{})
-		if res[0].Interface().(error) != errPassed{
+		if res[0].Interface().(error) != errPassed {
 			t.Errorf("%T{%+[1]v}.Typ().Error() failed, expected (expected == actual) %v == %v", di.value.Interface(), errPassed, res[0].Interface())
 		}
 	}
