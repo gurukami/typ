@@ -63,6 +63,9 @@ func IntStringDefault(value string) IntStringOption {
 // for digit values >= 10.
 func IntStringBase(value int) IntStringOption {
 	return func(t *intStrOpts) error {
+		if value < 2 || value > 36 {
+			return ErrBaseInvalid
+		}
 		t.base = value
 		return nil
 	}
@@ -81,6 +84,9 @@ func UintStringDefault(value string) UintStringOption {
 // for digit values >= 10.
 func UintStringBase(value int) UintStringOption {
 	return func(t *uintStrOpts) error {
+		if value < 2 || value > 36 {
+			return ErrBaseInvalid
+		}
 		t.base = value
 		return nil
 	}
@@ -104,6 +110,11 @@ func FloatStringDefault(value string) FloatStringOption {
 // necessary such that ParseFloat will return f exactly.
 func FloatStringFmtByte(value byte) FloatStringOption {
 	return func(t *floatStrOpts) error {
+		switch value {
+		case 'b', 'e', 'E', 'f', 'g', 'G':
+		default:
+			return ErrFmtByteInvalid
+		}
 		t.fmtByte = value
 		return nil
 	}
@@ -331,25 +342,16 @@ func (t *Type) Interface() (nv NullInterface) {
 
 // OptionBase returns the base for numeric conversion to string
 func (t *Type) OptionBase() int {
-	if t.opts.base == nil {
-		return 0
-	}
 	return *t.opts.base
 }
 
 // OptionFmtByte returns float format option for float conversion to string
 func (t *Type) OptionFmtByte() byte {
-	if t.opts.fmtByte == nil {
-		return 0
-	}
 	return *t.opts.fmtByte
 }
 
 // OptionPrecision returns float precision for float conversion to string
 func (t *Type) OptionPrecision() int {
-	if t.opts.precision == nil {
-		return 0
-	}
 	return *t.opts.precision
 }
 
