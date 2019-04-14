@@ -75,8 +75,8 @@ func init() {
 				b = true
 			}
 		case isInt(rv.Kind()):
-			bp := matrixSuite.GetOptByType(opts, reflect.TypeOf(BoolPositive(true)))
-			bh := matrixSuite.GetOptByType(opts, reflect.TypeOf(BoolHumanize(true)))
+			bp := matrixSuite.GetOptByType(opts, reflect.TypeOf(BoolPositive{}))
+			bh := matrixSuite.GetOptByType(opts, reflect.TypeOf(BoolHumanize{}))
 			if bp != nil || bh != nil {
 				if rv.Int() > 0 {
 					b = true

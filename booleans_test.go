@@ -7,8 +7,8 @@ import (
 	"testing"
 )
 
-type BoolPositive bool
-type BoolHumanize bool
+type BoolPositive struct{}
+type BoolHumanize struct{}
 
 var (
 	boolReflectTypes = []reflect.Type{
@@ -105,7 +105,6 @@ func init() {
 	})
 	// - to SQLValueType
 	matrixSuite.SetConverter(getDefaultType(reflect.Bool), reflect.TypeOf(SQLValueType{}), func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
-
 		return SQLValueType{driver.Value(from), from}, true
 	})
 	// For other types
@@ -117,7 +116,7 @@ func init() {
 func TestBool(t *testing.T) {
 	testData := matrixSuite.Generate()
 	for _, v := range testData {
-		expectedValue, expectedValid, _ := matrixSuite.Test(v.value.Interface(), getDefaultType(reflect.Bool))
+		expectedValue, expectedValid, _ := matrixSuite.Convert(v.value.Interface(), getDefaultType(reflect.Bool))
 		if expectedValue == nil {
 			continue
 		}
@@ -127,7 +126,8 @@ func TestBool(t *testing.T) {
 				expectedValue, expectedValid, nil,
 				nv.V(), nv.Valid(), nv.Error,
 			})
-		} // with error
+		}
+		// with error
 		nv = NewType(v.value.Interface(), errPassed).Bool()
 		if nv.Error != errPassed || nv.Valid() {
 			t.Errorf("Of(%T(%+[1]v)).BoolPositive(), %s", v.value.Interface(), errNull{
@@ -141,7 +141,7 @@ func TestBool(t *testing.T) {
 func TestBoolPositive(t *testing.T) {
 	testData := matrixSuite.Generate()
 	for _, v := range testData {
-		expectedValue, expectedValid, _ := matrixSuite.Test(v.value.Interface(), getDefaultType(reflect.Bool), BoolPositive(true))
+		expectedValue, expectedValid, _ := matrixSuite.Convert(v.value.Interface(), getDefaultType(reflect.Bool), BoolPositive{})
 		if expectedValue == nil {
 			continue
 		}
@@ -166,7 +166,7 @@ func TestBoolPositive(t *testing.T) {
 func TestBoolHumanize(t *testing.T) {
 	testData := matrixSuite.Generate()
 	for _, di := range testData {
-		eValue, expectedValid, _ := matrixSuite.Test(di.value.Interface(), getDefaultType(reflect.Bool), BoolHumanize(true))
+		eValue, expectedValid, _ := matrixSuite.Convert(di.value.Interface(), getDefaultType(reflect.Bool), BoolHumanize{})
 		if eValue == nil {
 			continue
 		}

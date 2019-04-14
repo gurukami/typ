@@ -39,7 +39,7 @@ func (n NullBool) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullBool) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return n.V(), nil
 }
@@ -77,7 +77,7 @@ func (n *NullBool) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullBool) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	return json.Marshal(n.V())
@@ -141,7 +141,7 @@ func (n NullComplex64) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullComplex64) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	nv := Complex64Float64(n.V())
 	return nv.V(), nv.Error
@@ -189,7 +189,7 @@ func (n *NullComplex64) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullComplex64) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	return json.Marshal(fmt.Sprintf("%v", n.V()))
@@ -253,7 +253,7 @@ func (n NullComplex) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullComplex) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	nv := ComplexFloat64(n.V())
 	return nv.V(), nv.Error
@@ -301,7 +301,7 @@ func (n *NullComplex) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullComplex) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	return json.Marshal(fmt.Sprintf("%v", n.V()))
@@ -365,7 +365,7 @@ func (n NullInt) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullInt) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return int64(n.V()), nil
 }
@@ -412,7 +412,7 @@ func (n *NullInt) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullInt) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	v := Of(n.V()).Float()
@@ -480,7 +480,7 @@ func (n NullInt8) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullInt8) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return int64(n.V()), nil
 }
@@ -527,7 +527,7 @@ func (n *NullInt8) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullInt8) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	v := Of(n.V()).Float()
@@ -592,7 +592,7 @@ func (n NullInt16) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullInt16) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return int64(n.V()), nil
 }
@@ -639,7 +639,7 @@ func (n *NullInt16) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullInt16) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	v := Of(n.V()).Float()
@@ -704,7 +704,7 @@ func (n NullInt32) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullInt32) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return int64(n.V()), nil
 }
@@ -751,7 +751,7 @@ func (n *NullInt32) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullInt32) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	v := Of(n.V()).Float()
@@ -816,7 +816,7 @@ func (n NullInt64) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullInt64) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return int64(n.V()), nil
 }
@@ -863,7 +863,7 @@ func (n *NullInt64) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullInt64) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	v := Of(n.V()).Float()
@@ -931,7 +931,7 @@ func (n NullUint) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullUint) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	nv := UintInt64(uint64(n.V()))
 	return nv.V(), nv.Error
@@ -979,7 +979,7 @@ func (n *NullUint) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullUint) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	v := Of(n.V()).Float()
@@ -1047,7 +1047,7 @@ func (n NullUint8) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullUint8) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return int64(n.V()), nil
 }
@@ -1094,7 +1094,7 @@ func (n *NullUint8) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullUint8) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	v := Of(n.V()).Float()
@@ -1159,7 +1159,7 @@ func (n NullUint16) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullUint16) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return int64(n.V()), nil
 }
@@ -1206,7 +1206,7 @@ func (n *NullUint16) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullUint16) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	v := Of(n.V()).Float()
@@ -1271,7 +1271,7 @@ func (n NullUint32) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullUint32) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return int64(n.V()), nil
 }
@@ -1318,7 +1318,7 @@ func (n *NullUint32) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullUint32) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	v := Of(n.V()).Float()
@@ -1383,7 +1383,7 @@ func (n NullUint64) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullUint64) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	nv := UintInt64(n.V())
 	return nv.V(), nv.Error
@@ -1431,7 +1431,7 @@ func (n *NullUint64) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullUint64) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	v := Of(n.V()).Float()
@@ -1499,7 +1499,7 @@ func (n NullFloat32) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullFloat32) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return float64(n.V()), nil
 }
@@ -1546,7 +1546,7 @@ func (n *NullFloat32) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullFloat32) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	return json.Marshal(n.V())
@@ -1610,7 +1610,7 @@ func (n NullFloat) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullFloat) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return n.V(), nil
 }
@@ -1652,7 +1652,7 @@ func (n *NullFloat) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullFloat) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	return json.Marshal(n.V())
@@ -1716,7 +1716,7 @@ func (n NullString) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullString) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return n.V(), nil
 }
@@ -1757,7 +1757,7 @@ func (n *NullString) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullString) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	return json.Marshal(n.V())
@@ -1821,7 +1821,7 @@ func (n NullInterface) Value() (driver.Value, error) {
 		return nil, ErrConvert
 	}
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return n.V(), nil
 }
@@ -1854,7 +1854,7 @@ func (n *NullInterface) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullInterface) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
+	if n.Error != nil || !n.Present() {
 		return json.Marshal(nil)
 	}
 	return json.Marshal(n.V())
@@ -1918,7 +1918,7 @@ func (n NullTime) Valid() bool {
 // Value implements the sql driver Valuer interface.
 func (n NullTime) Value() (driver.Value, error) {
 	if n.Error != nil || !n.Present() {
-		return nil, nil
+		return nil, n.Error
 	}
 	return n.V(), nil
 }
@@ -1944,8 +1944,8 @@ func (n *NullTime) UnmarshalJSON(b []byte) error {
 
 // MarshalJSON implements the json Marshaler interface.
 func (n NullTime) MarshalJSON() ([]byte, error) {
-	if n.Error != nil {
-		return []byte("null"), nil
+	if n.Error != nil || !n.Present() {
+		return json.Marshal(nil)
 	}
 	return n.V().MarshalJSON()
 }

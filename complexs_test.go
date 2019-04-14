@@ -37,8 +37,8 @@ func init() {
 	complexBoolConverter := func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		rv := reflect.ValueOf(from)
 		c, b := rv.Complex(), false
-		bp := matrixSuite.GetOptByType(opts, reflect.TypeOf(BoolPositive(true)))
-		bh := matrixSuite.GetOptByType(opts, reflect.TypeOf(BoolHumanize(true)))
+		bp := matrixSuite.GetOptByType(opts, reflect.TypeOf(BoolPositive{}))
+		bh := matrixSuite.GetOptByType(opts, reflect.TypeOf(BoolHumanize{}))
 		if bp != nil || bh != nil {
 			if real(c) > 0 {
 				b = true

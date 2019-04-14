@@ -10,6 +10,8 @@ import (
 	"time"
 )
 
+type NullStringBytes struct{}
+
 var (
 	nullReflectTypes = []reflect.Type{
 		reflect.TypeOf(&NullBool{}),
@@ -125,50 +127,51 @@ func init() {
 	// - from &Null*{} to JSONToken
 	matrixSuite.SetConverters(nullReflectTypes, jsonTokenReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		var (
-			v    interface{}
-			null bool
+			v       interface{}
+			null    bool
+			present bool
 		)
 		switch tv := from.(type) {
 		case *NullBool:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullComplex:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullComplex64:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullFloat32:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullFloat:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullInt:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullInt8:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullInt16:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullInt32:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullInt64:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullUint:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullUint8:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullUint16:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullUint32:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullUint64:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullString:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullInterface:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		case *NullTime:
-			v, null = tv.V(), !tv.Valid()
+			v, null, present = tv.V(), !tv.Valid(), tv.Present()
 		}
 		rv := reflect.ValueOf(v)
 		b, err := json.Marshal(v)
-		if null {
+		if null || !present {
 			b, err = []byte("null"), nil
 		}
 		if !rv.IsValid() {
@@ -182,7 +185,8 @@ func init() {
 		return &NullTime{P: &v}, true
 	})
 	matrixSuite.SetConverter(reflect.TypeOf(time.Time{}), sqlValueReflectType, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
-		return SQLValueType{from.(time.Time), from}, true
+		sv := from.(time.Time)
+		return SQLValueType{sv, from}, true
 	})
 	// - from &Null*{} to SQLValueType
 	matrixSuite.SetConverters(nullReflectTypes, sqlValueReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
@@ -658,14 +662,12 @@ func TestNullTimeSlice(t *testing.T) {
 
 func testScanSQL(t *testing.T, nv interface{}) {
 	testData := matrixSuite.GenerateToTyp(matrixSuite.Generate(), reflect.TypeOf(SQLValueType{}))
-	for _, di := range testData {
-		sv := di.value.Interface().(SQLValueType)
-		cnv, valid, _ := matrixSuite.Convert(sv, reflect.TypeOf(nv))
+	testSuite := func(sv SQLValueType, cnv interface{}, valid bool, err error) {
 		aErr := nv.(sql.Scanner).Scan(sv.SQLValue)
 		expected := testGetNullIfaceValue(cnv)
 		actual := testGetNullIfaceValue(nv)
 		if !valid {
-			continue
+			return
 		}
 		if !matrixSuite.Compare(actual.value, expected.value) || actual.valid != expected.valid || actual.err != expected.err {
 			t.Errorf("%T{}.Scan(%T([%[2]v])) failed, expected value by reference %s",
@@ -675,6 +677,11 @@ func testScanSQL(t *testing.T, nv interface{}) {
 					actual.value, actual.valid, aErr,
 				})
 		}
+	}
+	for _, di := range testData {
+		sv := di.value.Interface().(SQLValueType)
+		cnv, valid, _ := matrixSuite.Convert(sv, reflect.TypeOf(nv))
+		testSuite(sv, cnv, valid, nil)
 	}
 }
 
@@ -754,12 +761,12 @@ func testMarshalJSON(t *testing.T, nv interface{}) {
 	testData := matrixSuite.GenerateToTyp(matrixSuite.Generate(), reflect.TypeOf(nv))
 	for _, di := range testData {
 		v := di.value.Interface()
-		eValue, vv, _ := matrixSuite.Convert(v, jsonTokenReflectType)
-		if eValue == nil || !vv {
+		aValue, vv, _ := matrixSuite.Convert(v, jsonTokenReflectType)
+		if aValue == nil || !vv {
 			continue
 		}
-		jt := eValue.(JSONToken)
-		actualBytes, actualErr := v.(json.Marshaler).MarshalJSON()
+		jt := aValue.(JSONToken)
+		actualBytes, actualErr := json.Marshal(jt.Value)
 		if !bytes.Equal(actualBytes, jt.Token) && actualErr == nil {
 			t.Errorf("%T{%+[1]v}.MarshalJSON() failed, expected (expected == actual) []byte (%s == %s), error %v",
 				v, jt.Token, actualBytes, actualErr,

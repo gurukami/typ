@@ -216,10 +216,7 @@ func ComplexString(from complex128, options ...ComplexStringOption) (nv NullStri
 	opts := complexStrOpts{}
 	if len(options) > 0 {
 		for _, v := range options {
-			if optErr := v(&opts); optErr != nil {
-				nv.Error = optErr
-				break
-			}
+			_ = v(&opts)
 		}
 	}
 	if opts.defaultValue != nil {

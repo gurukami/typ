@@ -69,6 +69,9 @@ func init() {
 	matrixSuite.SetConverters(interfaceReflectTypes, sqlValueReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		return nil, false
 	})
+	matrixSuite.SetConverter(reflect.TypeOf(SQLValueType{}), reflect.TypeOf([]byte{}), func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
+		return SQLValueType{driver.Value(from), from}, true
+	})
 }
 
 var overFlowValue = string(bytes.Repeat([]byte("1"), 310))
@@ -552,7 +555,7 @@ func TestGeneric(t *testing.T) {
 	typ := Of(1.1, Precision(7), FmtByte('G'))
 	typ = Of(typ)
 	if typ.OptionFmtByte() != 'G' || typ.OptionPrecision() != 7 {
-		t.Error("Of(Of(nil), 7, 2, 'g') failed, copy of struct expected")
+		t.Error("Of(Of(1.1), Precision(7), FmtByte('G')) failed, copy of struct expected")
 	}
 	if Err := Of(nil).Int().Error; Err == nil || Err.Error() == "" {
 		t.Error("Of(nil).Int() failed, expects non empty error")
@@ -566,7 +569,7 @@ func TestSetFloatPrecision(t *testing.T) {
 	}
 	typ = Of(1.1, Precision(7))
 	if typ.OptionPrecision() != 7 {
-		t.Error("Of(nil, 7).OptionPrecision() failed, expects 7")
+		t.Error("Of(1.1, Precision(7)).OptionPrecision() failed, expects 7")
 	}
 }
 
@@ -577,7 +580,15 @@ func TestSetGetFloatFmt(t *testing.T) {
 	}
 	typ = Of(nil, FmtByte('g'))
 	if typ.OptionFmtByte() != 'g' {
-		t.Error("Of(nil, 'g').OptionFmtByte() failed, expects `g`")
+		t.Error("Of(nil, FmtByte('g')).OptionFmtByte() failed, expects `g`")
+	}
+	// Error
+	typ = Of(nil, FmtByte('z'))
+	if typ.OptionFmtByte() != 'e' {
+		t.Error("Of(nil, FmtByte('z')).OptionFmtByte() failed, expects `e`")
+	}
+	if typ.Error() != ErrFmtByteInvalid {
+		t.Errorf("Of(nil, FmtByte('z')).Error() failed, expects %v", ErrFmtByteInvalid)
 	}
 }
 
@@ -588,7 +599,7 @@ func TestSetGetBase(t *testing.T) {
 	}
 	typ = Of(nil, Base(2))
 	if typ.OptionBase() != 2 {
-		t.Error("Of(nil, 2).OptionBase() failed, expects 2")
+		t.Error("Of(nil, Base(2)).OptionBase() failed, expects 2")
 	}
 }
 
@@ -662,7 +673,7 @@ func testOfDefault(t *testing.T, v interface{}, methodTypeName string, defaultVa
 	}
 	rd := reflect.ValueOf(defaultValue)
 	actual := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
-	eValue, eValid, eError := matrixSuite.Test(v, getDefaultType(rd.Kind()))
+	eValue, eValid, eError := matrixSuite.Convert(v, getDefaultType(rd.Kind()))
 	if eValue == nil {
 		return
 	}
@@ -728,7 +739,7 @@ func testNative(t *testing.T, fn interface{}, args []interface{}) {
 	}
 	rres = rf.Call(rargs)
 	actual := testGetNullIfaceValue(reflect.Indirect(rres[0]).Interface())
-	eValue, eValid, eError := matrixSuite.Test(rargs[0].Interface(), getDefaultType(rargs[1].Kind()))
+	eValue, eValid, eError := matrixSuite.Convert(rargs[0].Interface(), getDefaultType(rargs[1].Kind()))
 	if eValue == nil {
 		return
 	}

@@ -106,10 +106,6 @@ func (m *matrix) SetComparator(typ reflect.Type, comparator Comparator) {
 	m.comparators[typ] = comparator
 }
 
-func (m *matrix) Test(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool, error) {
-	return m.Convert(from, to, opts...)
-}
-
 func (m *matrix) Convert(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool, error) {
 	if to == nil {
 		panic("to reflect type cannot be nil")
@@ -178,13 +174,13 @@ func (m *matrix) GenerateToTyp(di []dataItem, to reflect.Type) []dataItem {
 		}
 		ivt := ivi.Type().String()
 		if to != nil {
-			if iv, ok, _ := m.Convert(ivi.Interface(), to); ok {
+			if iv, ok, _ := m.Convert(ivi.Interface(), to, i.opts...); ok {
 				out = append(out, dataItem{reflect.ValueOf(iv), nil})
 			}
 		} else {
 			for ci, c := range m.converters {
 				if (ci.from == ivt || ci.from == "nil") && ivt != ci.to {
-					if iv, ok := c.converter(ivi.Interface(), c.to); ok {
+					if iv, ok := c.converter(ivi.Interface(), c.to, i.opts...); ok {
 						out = append(out, dataItem{reflect.ValueOf(iv), nil})
 					}
 				}
