@@ -84,9 +84,9 @@ func (n InterfaceCommon) Err() error {
 	return n.Error
 }
 
-// InterfaceAccessor
+// InterfaceAccessor accessor of interface{} type.
 type InterfaceAccessor interface {
-	NullCommon
+	Common
 	V() interface{}
 	Set(value interface{})
 	Clone() InterfaceAccessor

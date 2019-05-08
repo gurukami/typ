@@ -49,7 +49,8 @@ func init() {
 	matrixSuite.SetConverters(uintReflectTypes, boolReflectTypes, uintBoolConverter)
 	// - to complex
 	uintComplexConverter := func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
-		rv, c, s := reflect.ValueOf(from), complex128(0), false
+		var s bool
+		rv, c := reflect.ValueOf(from), complex128(0)
 		i := rv.Uint()
 		if s = isSafeUintToFloat(i, bitSizeMap[to.Kind()]); s {
 			c = complex(float64(i), 0)
@@ -65,7 +66,8 @@ func init() {
 	matrixSuite.SetConverters(uintReflectTypes, complexReflectTypes, uintComplexConverter)
 	// - to float
 	uintFloatConverter := func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
-		rv, f, s := reflect.ValueOf(from), float64(0), false
+		var s bool
+		rv, f := reflect.ValueOf(from), float64(0)
 		i := rv.Uint()
 		if s = isSafeUintToFloat(i, bitSizeMap[to.Kind()]); s {
 			f = float64(i)

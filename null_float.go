@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 )
 
-// Float32 represents a float32 that may be null.
+// Float32Common represents a float32 that may be null.
 type Float32Common struct {
 	P     *float32
 	Error error
@@ -99,9 +99,9 @@ func (n Float32Common) Err() error {
 	return n.Error
 }
 
-// Float32Accessor
+// Float32Accessor accessor of float32 type.
 type Float32Accessor interface {
-	NullCommon
+	Common
 	V() float32
 	Set(value float32)
 	Clone() Float32Accessor
@@ -264,9 +264,9 @@ func (n FloatCommon) Err() error {
 	return n.Error
 }
 
-// FloatAccessor
+// FloatAccessor accessor of float64 type.
 type FloatAccessor interface {
-	NullCommon
+	Common
 	V() float64
 	Set(value float64)
 	Clone() FloatAccessor

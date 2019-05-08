@@ -93,9 +93,9 @@ func (n StringCommon) Err() error {
 	return n.Error
 }
 
-// StringAccessor
+// StringAccessor accessor of string type.
 type StringAccessor interface {
-	NullCommon
+	Common
 	V() string
 	Set(value string)
 	Clone() StringAccessor

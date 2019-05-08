@@ -89,9 +89,9 @@ func (n BoolCommon) Err() error {
 	return n.Error
 }
 
-// BoolAccessor
+// BoolAccessor accessor of bool type.
 type BoolAccessor interface {
-	NullCommon
+	Common
 	V() bool
 	Set(value bool)
 	Clone() BoolAccessor
