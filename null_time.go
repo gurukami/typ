@@ -78,9 +78,9 @@ func (n TimeCommon) Err() error {
 	return n.Error
 }
 
-// TimeAccessor
+// TimeAccessor accessor of time.Time type.
 type TimeAccessor interface {
-	NullCommon
+	Common
 	V() time.Time
 	Set(value time.Time)
 	Clone() TimeAccessor

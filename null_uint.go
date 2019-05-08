@@ -104,9 +104,9 @@ func (n UintCommon) Err() error {
 	return n.Error
 }
 
-// UintAccessor
+// UintAccessor accessor of uint type.
 type UintAccessor interface {
-	NullCommon
+	Common
 	V() uint
 	Set(value uint)
 	Clone() UintAccessor
@@ -275,9 +275,9 @@ func (n Uint8Common) Err() error {
 	return n.Error
 }
 
-// Uint8Accessor
+// Uint8Accessor accessor of uint8 type.
 type Uint8Accessor interface {
-	NullCommon
+	Common
 	V() uint8
 	Set(value uint8)
 	Clone() Uint8Accessor
@@ -319,7 +319,7 @@ func NUint8(value uint8) Uint8Accessor {
 	return &NullUint8{Uint8Common{P: &value}}
 }
 
-// NotNullUint represents an uint8 with accessor.
+// NotNullUint8 represents an uint8 with accessor.
 type NotNullUint8 struct {
 	Uint8Common
 }
@@ -446,9 +446,9 @@ func (n Uint16Common) Err() error {
 	return n.Error
 }
 
-// Uint16Accessor
+// Uint16Accessor accessor of uint16 type.
 type Uint16Accessor interface {
-	NullCommon
+	Common
 	V() uint16
 	Set(value uint16)
 	Clone() Uint16Accessor
@@ -617,9 +617,9 @@ func (n Uint32Common) Err() error {
 	return n.Error
 }
 
-// Uint32Accessor
+// Uint32Accessor accessor of uint32 type.
 type Uint32Accessor interface {
-	NullCommon
+	Common
 	V() uint32
 	Set(value uint32)
 	Clone() Uint32Accessor
@@ -792,9 +792,9 @@ func (n Uint64Common) Err() error {
 	return n.Error
 }
 
-// Uint64Accessor
+// Uint64Accessor accessor of uint64 type.
 type Uint64Accessor interface {
-	NullCommon
+	Common
 	V() uint64
 	Set(value uint64)
 	Clone() Uint64Accessor

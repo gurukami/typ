@@ -101,9 +101,9 @@ func (n ComplexCommon) Err() error {
 	return n.Error
 }
 
-// ComplexAccessor
+// ComplexAccessor accessor of complex128 type.
 type ComplexAccessor interface {
-	NullCommon
+	Common
 	V() complex128
 	Set(value complex128)
 	Clone() ComplexAccessor
@@ -272,9 +272,9 @@ func (n Complex64Common) Err() error {
 	return n.Error
 }
 
-// Complex64Accessor
+// Complex64Accessor accessor of complex64 type.
 type Complex64Accessor interface {
-	NullCommon
+	Common
 	V() complex64
 	Set(value complex64)
 	Clone() Complex64Accessor

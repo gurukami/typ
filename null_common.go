@@ -1,7 +1,7 @@
 package typ
 
-// NullCommon
-type NullCommon interface {
+// Common general interface of accessor
+type Common interface {
 	Present() bool
 	Valid() bool
 	Typ(options ...Option) *Type
