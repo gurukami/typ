@@ -97,11 +97,16 @@ func init() {
 		}
 		return s, true
 	})
-	// - to &NullBool{}
-	matrixSuite.SetConverter(getDefaultType(reflect.Bool), reflect.TypeOf(&NullBool{}), func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
+	// - to &NullBool{}, &NotNullBool{}
+	matrixSuite.SetConverters(boolReflectTypes, nullBoolReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		v := from.(bool)
-		nb := &NullBool{P: &v}
-		return nb, true
+		switch {
+		case to == reflect.TypeOf(&NullBool{}):
+			return &NullBool{BoolCommon{P: &v}}, true
+		case to == reflect.TypeOf(&NotNullBool{}):
+			return &NotNullBool{BoolCommon{P: &v}}, true
+		}
+		return nil, false
 	})
 	// - to SQLValueType
 	matrixSuite.SetConverter(getDefaultType(reflect.Bool), reflect.TypeOf(SQLValueType{}), func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
@@ -124,15 +129,15 @@ func TestBool(t *testing.T) {
 		if !matrixSuite.Compare(nv.V(), expectedValue) || nv.Valid() != expectedValid {
 			t.Errorf("Of(%T(%+[1]v)).Bool(), %s", v.value.Interface(), errNull{
 				expectedValue, expectedValid, nil,
-				nv.V(), nv.Valid(), nv.Error,
+				nv.V(), nv.Valid(), nv.Err(),
 			})
 		}
 		// with error
 		nv = NewType(v.value.Interface(), errPassed).Bool()
-		if nv.Error != errPassed || nv.Valid() {
+		if nv.Err() != errPassed || nv.Valid() {
 			t.Errorf("Of(%T(%+[1]v)).BoolPositive(), %s", v.value.Interface(), errNull{
 				nil, false, errPassed,
-				nv.V(), nv.Valid(), nv.Error,
+				nv.V(), nv.Valid(), nv.Err(),
 			})
 		}
 	}
@@ -149,15 +154,15 @@ func TestBoolPositive(t *testing.T) {
 		if !matrixSuite.Compare(nv.V(), expectedValue) || nv.Valid() != expectedValid {
 			t.Errorf("Of(%T(%+[1]v)).BoolPositive(), %s", v.value.Interface(), errNull{
 				expectedValue, expectedValid, nil,
-				nv.V(), nv.Valid(), nv.Error,
+				nv.V(), nv.Valid(), nv.Err(),
 			})
 		}
 		// with error
 		nv = NewType(v.value.Interface(), errPassed).BoolPositive()
-		if nv.Error != errPassed || nv.Valid() {
+		if nv.Err() != errPassed || nv.Valid() {
 			t.Errorf("Of(%T(%+[1]v)).BoolPositive(), %s", v.value.Interface(), errNull{
 				nil, false, errPassed,
-				nv.V(), nv.Valid(), nv.Error,
+				nv.V(), nv.Valid(), nv.Err(),
 			})
 		}
 	}
@@ -174,7 +179,7 @@ func TestBoolHumanize(t *testing.T) {
 		if !matrixSuite.Compare(nv.V(), eValue) || nv.Valid() != expectedValid {
 			t.Errorf("Of(%T(%+[1]v)).BoolHumanize(), %s", di.value.Interface(), errNull{
 				eValue, expectedValid, nil,
-				nv.V(), nv.Valid(), nv.Error,
+				nv.V(), nv.Valid(), nv.Err(),
 			})
 		}
 		if stringNv, ok := di.value.Interface().(string); ok {
@@ -182,16 +187,16 @@ func TestBoolHumanize(t *testing.T) {
 			if !matrixSuite.Compare(nv.V(), eValue) || nv.Valid() != expectedValid {
 				t.Errorf("StringBoolHumanize(%T(%+[1]v)), %s", stringNv, errNull{
 					eValue, expectedValid, nil,
-					nv.V(), nv.Valid(), nv.Error,
+					nv.V(), nv.Valid(), nv.Err(),
 				})
 			}
 		}
 		// with error
 		nv = NewType(di.value.Interface(), errPassed).BoolHumanize()
-		if nv.Error != errPassed || nv.Valid() {
+		if nv.Err() != errPassed || nv.Valid() {
 			t.Errorf("Of(%T(%+[1]v)).BoolPositive(), %s", di.value.Interface(), errNull{
 				nil, false, errPassed,
-				nv.V(), nv.Valid(), nv.Error,
+				nv.V(), nv.Valid(), nv.Err(),
 			})
 		}
 	}

@@ -221,11 +221,11 @@ func TestCompositeGet(t *testing.T) {
 		value := typ.Interface()
 		testValid := value.Valid() != test
 		testEquals := test && !reflect.DeepEqual(value.V(), expects)
-		testError := !test && (value.Error != err)
+		testError := !test && (value.Err() != err)
 		if testValid || testEquals || testError {
 			t.Errorf("Of(%v[%[1]T]).Get(%v), %s", data, args, errNull{
 				expects, value.Valid(), err,
-				value.V(), value.Valid(), value.Error,
+				value.V(), value.Valid(), value.Err(),
 			})
 		}
 	}

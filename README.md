@@ -43,16 +43,14 @@ Then include package in your application and enjoy.
 //      Complex64, Complex, 
 //      String
 //
-// All methods for conversion returns Null{Type} struct with helpful methods & fields
+// All methods for conversion returns {Type}Accessor with helpful methods
 //
-//  fields:
-//      P - pointer to value
-//      Error - conversion error
-//
-//  methods:
 //      V() - value of type
 //      Present() - determines whether a value has been set
 //      Valid() - determines whether a value has been valid (without error)
+//      Err() error - returns underlying error  
+//      Set(value {Type}) - saves value into current struct  
+//      Clone() {Type}Accessor - returns new instance of current struct with preserved value & error  
 //      
 //      Scan(value interface{})         | sql.Scanner
 //      Value() (driver.Value, error)   | driver.Valuer
@@ -86,7 +84,7 @@ fmt.Printf("Value: %v, Valid: %v, Present: %v, Error: %v\n", nv.V(), nv.Valid(),
 //      Complex64, Complex, 
 //      String
 //
-// All methods for conversion returns Null{Type} struct with helpful methods & fields, additional info you can read in example above
+// All methods for conversion returns {Type}Accessor interface with helpful methods & fields, additional info you can read in example above
 
 // Valid
 nv := typ.FloatString(3.1415926535, typ.FloatStringFmtByte('g'), typ.FloatStringPrecision(4))

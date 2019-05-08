@@ -123,7 +123,7 @@ func init() {
 		return strconv.FormatFloat(rv.Float(), 'g', -1, bitSizeMap[rv.Kind()]), true
 	}
 	matrixSuite.SetConverters(floatReflectTypes, stringReflectTypes, floatStringConverter)
-	// - to &NullFloat*{}
+	// - to &NullFloat*{}, &NotNullFloat*{}
 	matrixSuite.SetConverters(floatReflectTypes, nullFloatReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		rv := reflect.ValueOf(from)
 		switch {
@@ -133,10 +133,20 @@ func init() {
 				err = ErrConvert
 			}
 			v := float32(rv.Float())
-			return &NullFloat32{P: &v, Error: err}, true
+			return &NullFloat32{Float32Common{P: &v, Error: err}}, true
 		case rv.Kind() == reflect.Float64 && to == reflect.TypeOf(&NullFloat{}):
 			v := rv.Float()
-			return &NullFloat{P: &v}, true
+			return &NullFloat{FloatCommon{P: &v}}, true
+		case rv.Kind() == reflect.Float32 && to == reflect.TypeOf(&NotNullFloat32{}):
+			var err error
+			if valid := isSafeFloat(rv.Float(), 32); !valid {
+				err = ErrConvert
+			}
+			v := float32(rv.Float())
+			return &NotNullFloat32{Float32Common{P: &v, Error: err}}, true
+		case rv.Kind() == reflect.Float64 && to == reflect.TypeOf(&NotNullFloat{}):
+			v := rv.Float()
+			return &NotNullFloat{FloatCommon{P: &v}}, true
 		}
 		return nil, false
 	})

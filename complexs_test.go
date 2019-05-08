@@ -119,16 +119,22 @@ func init() {
 		return fmt.Sprintf("%v", from), true
 	}
 	matrixSuite.SetConverters(complexReflectTypes, stringReflectTypes, complexStringConverter)
-	// - to &NullComplex*{}
-	matrixSuite.SetConverters(complexReflectTypes, nullComplexReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
+	// - to &NullComplex*{}, &NotNullComplex*{}
+	matrixSuite.SetConverters(complexReflectTypes, complexNullReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		rv := reflect.ValueOf(from)
 		switch {
 		case rv.Kind() == reflect.Complex64 && to == reflect.TypeOf(&NullComplex64{}):
 			v := complex64(rv.Complex())
-			return &NullComplex64{P: &v}, true
+			return &NullComplex64{Complex64Common{P: &v}}, true
 		case rv.Kind() == reflect.Complex128 && to == reflect.TypeOf(&NullComplex{}):
 			v := rv.Complex()
-			return &NullComplex{P: &v}, true
+			return &NullComplex{ComplexCommon{P: &v}}, true
+		case rv.Kind() == reflect.Complex64 && to == reflect.TypeOf(&NotNullComplex64{}):
+			v := complex64(rv.Complex())
+			return &NotNullComplex64{Complex64Common{P: &v}}, true
+		case rv.Kind() == reflect.Complex128 && to == reflect.TypeOf(&NotNullComplex{}):
+			v := rv.Complex()
+			return &NotNullComplex{ComplexCommon{P: &v}}, true
 		}
 		return nil, false
 	})
