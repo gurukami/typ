@@ -233,85 +233,87 @@ type Type struct {
 }
 
 // Convert "value" to any convertible primitive types
-func (t *Type) to(typeTo reflect.Kind) (nv NullInterface) {
+func (t *Type) to(typeTo reflect.Kind) InterfaceAccessor {
+	nv := &NullInterface{}
 	switch {
 	case isUint(typeTo):
 		v := t.toUint(typeTo)
-		nv.P, nv.Error = v.V(), v.Error
-		return
+		nv.P, nv.Error = v.V(), v.Err()
+		return nv
 	case isInt(typeTo):
 		v := t.toInt(typeTo)
-		nv.P, nv.Error = v.V(), v.Error
-		return
+		nv.P, nv.Error = v.V(), v.Err()
+		return nv
 	case isFloat(typeTo):
 		v := t.toFloat(typeTo)
-		nv.P, nv.Error = v.V(), v.Error
-		return
+		nv.P, nv.Error = v.V(), v.Err()
+		return nv
 	case isComplex(typeTo):
 		v := t.toComplex(typeTo)
-		nv.P, nv.Error = v.V(), v.Error
-		return
+		nv.P, nv.Error = v.V(), v.Err()
+		return nv
 	case typeTo == reflect.Bool:
 		v := t.Bool()
-		nv.P, nv.Error = v.V(), v.Error
-		return
+		nv.P, nv.Error = v.V(), v.Err()
+		return nv
 	case typeTo == reflect.String:
 		v := t.String()
-		nv.P, nv.Error = v.V(), v.Error
-		return
+		nv.P, nv.Error = v.V(), v.Err()
+		return nv
 	}
 	nv.Error = ErrConvert
-	return
+	return nv
 }
 
 // Empty determine whether a variable is zero
-func (t *Type) Empty() (nv NullBool) {
+func (t *Type) Empty() BoolAccessor {
+	nv := &NullBool{}
 	from := t.rv.Kind()
 	switch {
 	case t.IsUint(true):
 		v := t.rv.Uint() == 0
 		nv.P = &v
-		return
+		return nv
 	case t.IsInt(true):
 		v := t.rv.Int() == 0
 		nv.P = &v
-		return
+		return nv
 	case t.IsFloat(true):
 		v := t.rv.Float() == 0
 		nv.P = &v
-		return
+		return nv
 	case t.IsComplex(true):
 		v := t.rv.Complex() == 0
 		nv.P = &v
-		return
+		return nv
 	case t.IsComposite(true) || from == reflect.Chan || from == reflect.String:
 		v := t.rv.Len() == 0
 		nv.P = &v
-		return
+		return nv
 	case t.IsBool(true):
 		v := !t.rv.Bool()
 		nv.P = &v
-		return
+		return nv
 	case from == reflect.Uintptr:
 		v := t.rv.Interface().(uintptr) == 0
 		nv.P = &v
-		return
+		return nv
 	case from == reflect.UnsafePointer:
 		v := uintptr(t.rv.Interface().(unsafe.Pointer)) == 0
 		nv.P = &v
-		return
+		return nv
 	}
 	v := !t.rv.IsValid()
 	nv.P = &v
 	if v {
 		nv.Error = ErrUnexpectedValue
 	}
-	return
+	return nv
 }
 
 // Equals determine whether a variable is equals with current "value" (same value, but can have different primitives types)
 // Primitives type is: int, uint, float, complex, bool
-func (t *Type) Equals(value interface{}) NullBool {
+func (t *Type) Equals(value interface{}) BoolAccessor {
 	if vp := Of(value).to(t.rv.Kind()); vp.Valid() {
 		value = vp.V()
 	}
@@ -319,25 +321,26 @@ func (t *Type) Equals(value interface{}) NullBool {
 }
 
 // Identical determine whether a variable is identical with current "value" (same type and same value)
-func (t *Type) Identical(src interface{}) (nv NullBool) {
+func (t *Type) Identical(src interface{}) BoolAccessor {
+	nv := &NullBool{}
 	if !t.rv.IsValid() {
 		nv.Error = ErrUnexpectedValue
-		return
+		return nv
 	}
 	v := reflect.DeepEqual(t.rv.Interface(), src)
 	nv.P = &v
-	return
+	return nv
 }
 
 // Interface returns value as interface.
 // Returns nil if value can't safely represents as interface
-func (t *Type) Interface() (nv NullInterface) {
-	nv = NullInterface{Error: t.err}
+func (t *Type) Interface() InterfaceAccessor {
+	nv := &NullInterface{InterfaceCommon{Error: t.err}}
 	if !t.rv.IsValid() {
-		return
+		return nv
 	}
 	nv.P = t.rv.Interface()
-	return
+	return nv
 }
 
 // OptionBase returns the base for numeric conversion to string

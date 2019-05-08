@@ -7,9 +7,10 @@ import (
 
 // Bool convert interface value to bool.
 // Returns true for any non-zero values
-func (t *Type) Bool() (nv NullBool) {
+func (t *Type) Bool() BoolAccessor {
+	nv := &NullBool{}
 	if nv.Error = t.err; t.err != nil {
-		return
+		return nv
 	}
 	return t.toBool(false)
 }
@@ -17,9 +18,10 @@ func (t *Type) Bool() (nv NullBool) {
 // BoolHumanize convert interface value to bool.
 // Returns false for string 'false' in case-insensitive mode or string equals '0', for other types
 // returns true only for positive values
-func (t *Type) BoolHumanize() (nv NullBool) {
+func (t *Type) BoolHumanize() BoolAccessor {
+	nv := &NullBool{}
 	if nv.Error = t.err; t.err != nil {
-		return
+		return nv
 	}
 	switch {
 	case t.IsString(true):
@@ -29,11 +31,11 @@ func (t *Type) BoolHumanize() (nv NullBool) {
 			nv.Error = ErrUnexpectedValue
 		}
 		nv.P = &bt
-		return
+		return nv
 	case t.IsBool(true):
 		v := t.rv.Bool()
 		nv.P = &v
-		return
+		return nv
 	default:
 		return t.toBool(true)
 	}
@@ -41,17 +43,21 @@ func (t *Type) BoolHumanize() (nv NullBool) {
 
 // BoolPositive convert interface value to bool.
 // Returns true only for positive values
-func (t *Type) BoolPositive() (nv NullBool) {
+func (t *Type) BoolPositive() BoolAccessor {
+	nv := &NullBool{}
 	if nv.Error = t.err; t.err != nil {
-		return
+		return nv
 	}
 	return t.toBool(true)
 }
 
 // Convert interface value to bool.
 // It check positive values if argument "positive" is true, otherwise always true for any non-zero values
-func (t *Type) toBool(positive bool) (nv NullBool) {
-	var v bool
+func (t *Type) toBool(positive bool) BoolAccessor {
+	var (
+		nv BoolAccessor
+		v  bool
+	)
 	switch {
 	case t.IsBool(true):
 		v = t.rv.Bool()
@@ -84,24 +90,26 @@ func (t *Type) toBool(positive bool) (nv NullBool) {
 				goto end
 			}
 		}
-		nv = t.Empty()
-		*nv.P = !*nv.P
-		return
+		nv = t.Empty().Clone()
+		nv.Set(!nv.V())
+		return nv
 	}
 end:
-	nv.P = &v
-	return
+	nv = &NullBool{}
+	nv.Set(v)
+	return nv
 }
 
 // StringBoolHumanize convert value from string to bool.
 // Returns false for string 'false' in case-insensitive mode or string equals '0'
-func StringBoolHumanize(from string) (nv NullBool) {
+func StringBoolHumanize(from string) BoolAccessor {
+	nv := &NullBool{}
 	bf := strings.EqualFold("false", from) || from == "0"
 	bt := strings.EqualFold("true", from) || from == "1"
 	if !bf && !bt {
 		nv.Error = ErrUnexpectedValue
-		return
+		return nv
 	}
 	nv.P = &bt
-	return
+	return nv
 }

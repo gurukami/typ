@@ -26,6 +26,15 @@ var (
 
 func init() {
 	// Test Data
+	var nullReflectTypes []reflect.Type
+	nullReflectTypes = append(nullReflectTypes, nullBoolReflectTypes...)
+	nullReflectTypes = append(nullReflectTypes, complexNullReflectTypes...)
+	nullReflectTypes = append(nullReflectTypes, nullFloatReflectTypes...)
+	nullReflectTypes = append(nullReflectTypes, nullIntReflectTypes...)
+	nullReflectTypes = append(nullReflectTypes, nullInterfaceReflectTypes...)
+	nullReflectTypes = append(nullReflectTypes, nullStringReflectTypes...)
+	nullReflectTypes = append(nullReflectTypes, nullTimeReflectTypes...)
+	nullReflectTypes = append(nullReflectTypes, nullUintReflectTypes...)
 	dm := map[string]interface{}{"key": "Value"}
 	ds := []interface{}{1, 2, 3}
 	matrixSuite.Register(reflect.TypeOf(JSONToken{}), []dataItem{
@@ -38,7 +47,7 @@ func init() {
 		{reflect.ValueOf(SQLValueType{struct{}{}, struct{}{}}), nil},
 	})
 	// Converters
-	// - from JSONToken to &Null*{}
+	// - from JSONToken to &Null*{}, &NotNull*{}
 	matrixSuite.SetConverters(jsonTokenReflectTypes, nullReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		jt := from.(JSONToken)
 		var v interface{}
@@ -48,10 +57,15 @@ func init() {
 		v, c, _ := matrixSuite.Convert(v, to)
 		return v, c
 	})
-	// - from SQLValueType to &Null*{}
+	// - from SQLValueType to &Null*{}, &NotNull*{}
 	matrixSuite.SetConverters(sqlValueReflectTypes, nullReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		sv := from.(SQLValueType)
 		if to == reflect.TypeOf(&NullInterface{}) {
+			if reflect.TypeOf(from) != to {
+				return nil, false
+			}
+		}
+		if to == reflect.TypeOf(&NotNullInterface{}) {
 			if reflect.TypeOf(from) != to {
 				return nil, false
 			}
@@ -71,6 +85,14 @@ func init() {
 	})
 	matrixSuite.SetConverter(reflect.TypeOf(SQLValueType{}), reflect.TypeOf([]byte{}), func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		return SQLValueType{driver.Value(from), from}, true
+	})
+	matrixSuite.SetComparator(reflect.TypeOf(dTypes[reflect.Func]), func(a interface{}, b interface{}) bool {
+		arv := reflect.ValueOf(a)
+		arb := reflect.ValueOf(b)
+		if arv.Kind() == arb.Kind() {
+			return arv.Pointer() == arb.Pointer()
+		}
+		return false
 	})
 }
 
@@ -134,7 +156,7 @@ func TestEquals(t *testing.T) {
 		expectedValue bool
 		expectedValid bool
 		expectedError error
-		value         NullBool
+		value         BoolAccessor
 	)
 	for _, v := range testData {
 		val = v[0].(interface{})
@@ -144,15 +166,15 @@ func TestEquals(t *testing.T) {
 		expectedError, _ = v[4].(error)
 		typ := Of(val)
 		res := rFnCall(typ.Equals, args)
-		value = res[0].(NullBool)
-		if value.V() != expectedValue || value.Valid() != expectedValid || value.Error != expectedError {
-			t.Errorf("Of(%v).Equals(%v) = %v failed, expects %v, Error: %v Valid: %v", val, args, res[0], expectedValue, value.Error, value.Valid())
+		value = res[0].(BoolAccessor)
+		if value.V() != expectedValue || value.Valid() != expectedValid || value.Err() != expectedError {
+			t.Errorf("Of(%v).Equals(%v) = %v failed, expects %v, Error: %v Valid: %v", val, args, res[0], expectedValue, value.Err(), value.Valid())
 		}
 	}
 	// Nil tests
 	value = Of(nil).Equals(nil)
-	if value.V() || value.Valid() || value.Error == nil {
-		t.Errorf("Of(%v).Equals(%v) = %v failed, expects %v, Error: %v Valid: %v", nil, nil, value.V(), false, value.Error, value.Valid())
+	if value.V() || value.Valid() || value.Err() == nil {
+		t.Errorf("Of(%v).Equals(%v) = %v failed, expects %v, Error: %v Valid: %v", nil, nil, value.V(), false, value.Err(), value.Valid())
 	}
 }
 
@@ -256,7 +278,7 @@ func TestIdentical(t *testing.T) {
 		expectedValue bool
 		expectedValid bool
 		expectedError error
-		value         NullBool
+		value         BoolAccessor
 	)
 	for _, v := range testData {
 		val = v[0].(interface{})
@@ -266,15 +288,15 @@ func TestIdentical(t *testing.T) {
 		expectedError, _ = v[4].(error)
 		typ := Of(val)
 		res := rFnCall(typ.Identical, args)
-		value = res[0].(NullBool)
-		if value.V() != expectedValue || value.Valid() != expectedValid || value.Error != expectedError {
-			t.Errorf("Of(%v).Identical(%v) = %v failed, expects %v, Error: %v Valid: %v", val, args, res[0], expectedValue, value.Error, value.Valid())
+		value = res[0].(BoolAccessor)
+		if value.V() != expectedValue || value.Valid() != expectedValid || value.Err() != expectedError {
+			t.Errorf("Of(%v).Identical(%v) = %v failed, expects %v, Error: %v Valid: %v", val, args, res[0], expectedValue, value.Err(), value.Valid())
 		}
 	}
 	// Nil tests
 	value = Of(nil).Identical(nil)
-	if value.V() || value.Valid() || value.Error == nil {
-		t.Errorf("Of(%v).Identical(%v) = %v failed, expects %v, Error: %v Valid: %v", nil, nil, value.V(), false, value.Error, value.Valid())
+	if value.V() || value.Valid() || value.Err() == nil {
+		t.Errorf("Of(%v).Identical(%v) = %v failed, expects %v, Error: %v Valid: %v", nil, nil, value.V(), false, value.Err(), value.Valid())
 	}
 }
 
@@ -519,7 +541,7 @@ func TestEmpty(t *testing.T) {
 		expectedValue bool
 		expectedValid bool
 		expectedError error
-		value         NullBool
+		value         BoolAccessor
 	)
 	for _, v := range testData {
 		for k, iV := range v[0].([]interface{}) {
@@ -527,15 +549,15 @@ func TestEmpty(t *testing.T) {
 			expectedValid = v[2].([]bool)[k]
 			expectedError = v[3].([]error)[k]
 			value = Of(iV).Empty()
-			if value.V() != expectedValue || value.Valid() != expectedValid || value.Error != expectedError {
-				t.Errorf("Of(%v).Empty() as %T type failed, expects %v, actual %v, Error: %v Valid: %v", iV, iV, expectedValue, value.V(), value.Error, value.Valid())
+			if value.V() != expectedValue || value.Valid() != expectedValid || value.Err() != expectedError {
+				t.Errorf("Of(%v).Empty() as %T type failed, expects %v, actual %v, Error: %v Valid: %v", iV, iV, expectedValue, value.V(), value.Err(), value.Valid())
 			}
 		}
 	}
 	// Nil tests
 	value = Of(nil).Empty()
-	if !value.V() || value.Valid() || value.Error == nil {
-		t.Errorf("Of(%v).Empty() = %v failed, expects %v, Error: %v Valid: %v", nil, value.V(), false, value.Error, value.Valid())
+	if !value.V() || value.Valid() || value.Err() == nil {
+		t.Errorf("Of(%v).Empty() = %v failed, expects %v, Error: %v Valid: %v", nil, value.V(), false, value.Err(), value.Valid())
 	}
 }
 
@@ -557,7 +579,7 @@ func TestGeneric(t *testing.T) {
 	if typ.OptionFmtByte() != 'G' || typ.OptionPrecision() != 7 {
 		t.Error("Of(Of(1.1), Precision(7), FmtByte('G')) failed, copy of struct expected")
 	}
-	if Err := Of(nil).Int().Error; Err == nil || Err.Error() == "" {
+	if Err := Of(nil).Int().Err(); Err == nil || Err.Error() == "" {
 		t.Error("Of(nil).Int() failed, expects non empty error")
 	}
 }
@@ -624,39 +646,75 @@ func testGetNullIfaceValue(nv interface{}) testNullSuite {
 	switch v := nv.(type) {
 	case NullBool:
 		return testNullSuite{v.V(), reflect.Bool, v.Valid(), v.Present(), v.Error}
+	case NotNullBool:
+		return testNullSuite{v.V(), reflect.Bool, v.Valid(), v.Present(), v.Error}
 	case NullComplex64:
+		return testNullSuite{value: v.V(), nkind: reflect.Complex64, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullComplex64:
 		return testNullSuite{value: v.V(), nkind: reflect.Complex64, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullComplex:
 		return testNullSuite{value: v.V(), nkind: reflect.Complex128, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullComplex:
+		return testNullSuite{value: v.V(), nkind: reflect.Complex128, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullInt:
+		return testNullSuite{value: v.V(), nkind: reflect.Int, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullInt:
 		return testNullSuite{value: v.V(), nkind: reflect.Int, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullInt8:
 		return testNullSuite{value: v.V(), nkind: reflect.Int8, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullInt8:
+		return testNullSuite{value: v.V(), nkind: reflect.Int8, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullInt16:
+		return testNullSuite{value: v.V(), nkind: reflect.Int16, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullInt16:
 		return testNullSuite{value: v.V(), nkind: reflect.Int16, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullInt32:
 		return testNullSuite{value: v.V(), nkind: reflect.Int32, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullInt32:
+		return testNullSuite{value: v.V(), nkind: reflect.Int32, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullInt64:
+		return testNullSuite{value: v.V(), nkind: reflect.Int64, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullInt64:
 		return testNullSuite{value: v.V(), nkind: reflect.Int64, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullUint:
 		return testNullSuite{value: v.V(), nkind: reflect.Uint, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullUint:
+		return testNullSuite{value: v.V(), nkind: reflect.Uint, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullUint8:
+		return testNullSuite{value: v.V(), nkind: reflect.Uint8, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullUint8:
 		return testNullSuite{value: v.V(), nkind: reflect.Uint8, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullUint16:
 		return testNullSuite{value: v.V(), nkind: reflect.Uint16, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullUint16:
+		return testNullSuite{value: v.V(), nkind: reflect.Uint16, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullUint32:
+		return testNullSuite{value: v.V(), nkind: reflect.Uint32, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullUint32:
 		return testNullSuite{value: v.V(), nkind: reflect.Uint32, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullUint64:
 		return testNullSuite{value: v.V(), nkind: reflect.Uint64, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullUint64:
+		return testNullSuite{value: v.V(), nkind: reflect.Uint64, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullFloat32:
+		return testNullSuite{value: v.V(), nkind: reflect.Float32, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullFloat32:
 		return testNullSuite{value: v.V(), nkind: reflect.Float32, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullFloat:
 		return testNullSuite{value: v.V(), nkind: reflect.Float64, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullFloat:
+		return testNullSuite{value: v.V(), nkind: reflect.Float64, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullString:
+		return testNullSuite{value: v.V(), nkind: reflect.String, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullString:
 		return testNullSuite{value: v.V(), nkind: reflect.String, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullTime:
 		return testNullSuite{value: v.V(), nkind: reflect.Struct, valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullTime:
+		return testNullSuite{value: v.V(), nkind: reflect.Struct, valid: v.Valid(), present: v.Present(), err: v.Error}
 	case NullInterface:
+		return testNullSuite{value: v.V(), nkind: reflect.ValueOf(v.V()).Kind(), valid: v.Valid(), present: v.Present(), err: v.Error}
+	case NotNullInterface:
 		return testNullSuite{value: v.V(), nkind: reflect.ValueOf(v.V()).Kind(), valid: v.Valid(), present: v.Present(), err: v.Error}
 	}
 	return testNullSuite{nkind: reflect.Invalid}

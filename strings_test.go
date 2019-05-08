@@ -144,12 +144,17 @@ func init() {
 
 	matrixSuite.SetConverters(stringReflectTypes, complexReflectTypes, stringComplexConverter)
 
-	// - to &NullString{}
+	// - to &NullString{}, &NotNullString{}
 
 	matrixSuite.SetConverters(stringReflectTypes, nullStringReflectTypes, func(from interface{}, to reflect.Type, opts ...interface{}) (interface{}, bool) {
 		v := from.(string)
-		nb := &NullString{P: &v}
-		return nb, true
+		switch {
+		case to == reflect.TypeOf(&NullString{}):
+			return &NullString{StringCommon{P: &v}}, true
+		case to == reflect.TypeOf(&NotNullString{}):
+			return &NotNullString{StringCommon{P: &v}}, true
+		}
+		return nil, false
 	})
 
 	// - to SQLValueType
@@ -220,18 +225,18 @@ func TestConcat(t *testing.T) {
 			})
 		}
 		// with option error
-		if s := Concat(v[0].([]interface{}), Base(99)); s.V() != "" || s.Error != ErrBaseInvalid {
+		if s := Concat(v[0].([]interface{}), Base(99)); s.V() != "" || s.Err() != ErrBaseInvalid {
 			t.Errorf("Concat(%v), %s", v[0].([]interface{}), errNull{
 				"", false, ErrBaseInvalid,
-				s.V(), false, s.Error,
+				s.V(), false, s.Err(),
 			})
 		}
 		// with convert error
 		vls := []interface{}{nil}
-		if s := Concat([]interface{}{nil}, options...); s.Error == nil {
+		if s := Concat([]interface{}{nil}, options...); s.Err() == nil {
 			t.Errorf("Concat(%v), %s", vls, errNull{
 				"", false, ErrUnexpectedValue,
-				s.V(), false, s.Error,
+				s.V(), false, s.Err(),
 			})
 		}
 	}
@@ -258,10 +263,10 @@ func TestStringEmpty(t *testing.T) {
 		}
 		// with error
 		nv := NewType(v[0], errPassed).StringEmpty()
-		if nv.Error != errPassed || nv.Valid() {
+		if nv.Err() != errPassed || nv.Valid() {
 			t.Errorf("Of(%T(%+[1]v)).StringEmpty(), %s", v[0], errNull{
 				nil, false, errPassed,
-				nv.V(), nv.Valid(), nv.Error,
+				nv.V(), nv.Valid(), nv.Err(),
 			})
 		}
 	}
@@ -291,10 +296,10 @@ func TestStringDefault(t *testing.T) {
 		}
 		// with error
 		nv := NewType(v[0], errPassed).StringDefault(defaultValue)
-		if nv.Error != errPassed || nv.Valid() {
+		if nv.Err() != errPassed || nv.Valid() {
 			t.Errorf("Of(%T(%+[1]v)).StringDefault(%v), %s", v[0], defaultValue, errNull{
 				nil, false, errPassed,
-				nv.V(), nv.Valid(), nv.Error,
+				nv.V(), nv.Valid(), nv.Err(),
 			})
 		}
 	}
@@ -327,7 +332,7 @@ func TestStringInt(t *testing.T) {
 		s := Of(v[0]).StringInt()
 		expectedValue := v[1].(string)
 		failed := !v[2].(bool)
-		if s.V() != expectedValue && ((s.Error == nil) != failed) {
+		if s.V() != expectedValue && ((s.Err() == nil) != failed) {
 			t.Errorf("Of(%v).StringInt(), %s", v[0], errNull{
 				expectedValue, false, nil,
 				s.V(), false, nil,
@@ -335,10 +340,10 @@ func TestStringInt(t *testing.T) {
 		}
 		// with error
 		nv := NewType(v[0], errPassed).StringInt()
-		if nv.Error != errPassed || nv.Valid() {
+		if nv.Err() != errPassed || nv.Valid() {
 			t.Errorf("Of(%T(%+[1]v)).StringInt(), %s", v[0], errNull{
 				nil, false, errPassed,
-				nv.V(), nv.Valid(), nv.Error,
+				nv.V(), nv.Valid(), nv.Err(),
 			})
 		}
 	}
@@ -373,10 +378,10 @@ func TestStringBool(t *testing.T) {
 		}
 		// with error
 		nv := NewType(v[0], errPassed).StringBool()
-		if nv.Error != errPassed || nv.Valid() {
+		if nv.Err() != errPassed || nv.Valid() {
 			t.Errorf("Of(%T(%+[1]v)).StringBool(), %s", v[0], errNull{
 				nil, false, errPassed,
-				nv.V(), nv.Valid(), nv.Error,
+				nv.V(), nv.Valid(), nv.Err(),
 			})
 		}
 	}
@@ -399,7 +404,7 @@ func TestStringFloat(t *testing.T) {
 		s := Of(v[0]).StringFloat()
 		expectedValue := v[1].(string)
 		failed := !v[2].(bool)
-		if s.V() != expectedValue && ((s.Error == nil) != failed) {
+		if s.V() != expectedValue && ((s.Err() == nil) != failed) {
 			t.Errorf("Of(%v).StringFloat(), %s", v[0], errNull{
 				expectedValue, false, nil,
 				s.V(), false, nil,
@@ -407,10 +412,10 @@ func TestStringFloat(t *testing.T) {
 		}
 		// with error
 		nv := NewType(v[0], errPassed).StringFloat()
-		if nv.Error != errPassed || nv.Valid() {
+		if nv.Err() != errPassed || nv.Valid() {
 			t.Errorf("Of(%T(%+[1]v)).StringFloat(), %s", v[0], errNull{
 				nil, false, errPassed,
-				nv.V(), nv.Valid(), nv.Error,
+				nv.V(), nv.Valid(), nv.Err(),
 			})
 		}
 	}
@@ -433,7 +438,7 @@ func TestStringComplex(t *testing.T) {
 		s := Of(v[0]).StringComplex()
 		expectedValue := v[1].(string)
 		failed := !v[2].(bool)
-		if s.V() != expectedValue && ((s.Error == nil) != failed) {
+		if s.V() != expectedValue && ((s.Err() == nil) != failed) {
 			t.Errorf("Of(%v).StringComplex(), %s", v[0], errNull{
 				expectedValue, false, nil,
 				s.V(), false, nil,
@@ -441,10 +446,10 @@ func TestStringComplex(t *testing.T) {
 		}
 		// with error
 		nv := NewType(v[0], errPassed).StringComplex()
-		if nv.Error != errPassed || nv.Valid() {
+		if nv.Err() != errPassed || nv.Valid() {
 			t.Errorf("Of(%T(%+[1]v)).StringComplex(), %s", v[0], errNull{
 				nil, false, errPassed,
-				nv.V(), nv.Valid(), nv.Error,
+				nv.V(), nv.Valid(), nv.Err(),
 			})
 		}
 	}
@@ -500,10 +505,10 @@ func TestIntString(t *testing.T) {
 			t.Errorf("IntString(%v), %s", args, errMsg)
 		}
 		// with option error
-		if s := IntString(args[0].(int64), IntStringBase(99)); s.Error != ErrBaseInvalid {
+		if s := IntString(args[0].(int64), IntStringBase(99)); s.Err() != ErrBaseInvalid {
 			t.Errorf("IntString(%v), %s", v[0].([]interface{}), errNull{
 				"", false, ErrBaseInvalid,
-				"", false, s.Error,
+				"", false, s.Err(),
 			})
 		}
 	}
@@ -536,10 +541,10 @@ func TestUintString(t *testing.T) {
 			t.Errorf("UintString(%v), %s", args, errMsg)
 		}
 		// with option error
-		if s := UintString(args[0].(uint64), UintStringBase(99)); s.Error != ErrBaseInvalid {
+		if s := UintString(args[0].(uint64), UintStringBase(99)); s.Err() != ErrBaseInvalid {
 			t.Errorf("UintString(%v), %s", v[0].([]interface{}), errNull{
 				"", false, ErrBaseInvalid,
-				"", false, s.Error,
+				"", false, s.Err(),
 			})
 		}
 	}
@@ -576,10 +581,10 @@ func TestFloatString(t *testing.T) {
 			t.Errorf("FloatString(%v), %s", args, errMsg)
 		}
 		// with option error
-		if s := FloatString(args[0].(float64), FloatStringFmtByte('z')); s.Error != ErrFmtByteInvalid {
+		if s := FloatString(args[0].(float64), FloatStringFmtByte('z')); s.Err() != ErrFmtByteInvalid {
 			t.Errorf("FloatString(%v), %s", v[0].([]interface{}), errNull{
 				"", false, ErrFmtByteInvalid,
-				"", false, s.Error,
+				"", false, s.Err(),
 			})
 		}
 	}
