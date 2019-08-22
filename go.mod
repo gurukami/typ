@@ -1,3 +1,3 @@
-module github.com/gurukami/typ
+module github.com/gurukami/typ/v2
 
 go 1.12

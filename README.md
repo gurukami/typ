@@ -27,7 +27,7 @@ Use ```go get``` to install the latest version of the library.
 Then include package in your application and enjoy.
 
 ```go
-    import "github.com/gurukami/typ"
+    import "github.com/gurukami/typ/v2"
 ```
 ## Usage
 
