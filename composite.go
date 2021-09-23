@@ -46,7 +46,12 @@ func (t *Type) Get(argIndexes ...interface{}) (typ *Type) {
 			return NewType(nil, ErrUnexpectedValue)
 		}
 		if i == cnt-1 {
-			return NewType(p.Interface(), nil)
+			typed := &Type{
+				rv:   reflect.ValueOf(p.Interface()),
+				opts: t.opts,
+			}
+			typed.kind = typed.rv.Kind()
+			return typed
 		}
 	}
 	return NewType(nil, ErrInvalidArgument)
