@@ -371,7 +371,7 @@ func Of(value interface{}, options ...Option) *Type {
 
 var (
 	dBase      = 10
-	dFmtByte   = byte('e')
+	dFmtByte   = byte('f')
 	dPrecision = -1
 )
 
