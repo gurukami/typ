@@ -378,7 +378,7 @@ var (
 // NewType create a Type instance with value.
 // This function recursive dereference value by a reference if value is a pointer
 func NewType(value interface{}, err error, options ...Option) *Type {
-	nt := &Type{}
+	nt := &Type{err: err}
 	switch v := value.(type) {
 	case *Type:
 		nt.rv, nt.kind = v.rv, v.kind
@@ -390,7 +390,6 @@ func NewType(value interface{}, err error, options ...Option) *Type {
 	default:
 		nt.rv = reflect.ValueOf(value)
 		nt.kind = nt.rv.Kind()
-		nt.err = err
 	next:
 		for {
 			switch nt.rv.Kind() {
